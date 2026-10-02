@@ -214,6 +214,7 @@ function landWordmark() {
   });
   landed = true;
   wordmark.classList.add("landed"); // clicks on, visuals untouched
+  wordmark.classList.add("is-solid"); // wipe done: lock solid lime
   wordmark.removeAttribute("tabindex"); // keyboard can reach the logo now
   document.getElementById("wordmarkLayer").removeAttribute("aria-hidden");
 }
@@ -317,6 +318,7 @@ function runIntro() {
       onComplete: () => {
         landed = true;
         wordmark.classList.add("landed"); // clicks on, visuals untouched
+        wordmark.classList.add("is-solid"); // wipe done: lock solid lime
         wordmark.removeAttribute("tabindex");
         document.getElementById("wordmarkLayer").removeAttribute("aria-hidden");
       },

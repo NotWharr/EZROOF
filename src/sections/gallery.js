@@ -89,10 +89,12 @@ export function initGallery() {
 
   // Per-card painters, created once. The ticker calls these every
   // frame instead of building tweens, which stays cheap for 8 cards.
+  // Opacity lives on the photo FRAME, never the caption: dimmed text
+  // would fail contrast, dimmed photos keep full readability.
   const painters = cards.map((card) => ({
     scale: gsap.quickSetter(card, "scale"),
     x: gsap.quickSetter(card, "x"),
-    opacity: gsap.quickSetter(card, "opacity"),
+    opacity: gsap.quickSetter(card.querySelector(".rail-frame"), "opacity"),
     el: card,
   }));
 
@@ -262,13 +264,13 @@ export function initGallery() {
   }
 
   // Entrance: cards rise in staggered, center card already lensed.
+  // Y-only (no opacity fade): text never rests semi-transparent.
   if (!reduceMotion) {
     gsap.fromTo(
       cards,
-      { y: 60, opacity: 0 },
+      { y: 60 },
       {
         y: 0,
-        opacity: 1,
         duration: 0.8,
         ease: MOTION.EASE_OUT,
         stagger: MOTION.RISE_STAGGER,

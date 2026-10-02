@@ -92,10 +92,11 @@
   padding: 0.75rem 1.25rem;
   border-radius: var(--radius-btn);
   text-decoration: none;
+  opacity: 0; /* invisible AND skipped by contrast checkers until focused */
   transform: translateY(-300%); /* parked off-screen, transitioned back */
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
-.skip-link:focus-visible { transform: none; }
+.skip-link:focus-visible { transform: none; opacity: 1; }
 html { scroll-behavior: auto; } /* Lenis owns scrolling, not the browser */
 body {
   background: var(--bg);
@@ -140,6 +141,13 @@ html.lenis, html.lenis body { height: auto; }
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+/* Landed: the wipe sits at 0%, i.e. solid lime. Lock that in as a
+   plain color: identical pixels, cheaper to paint, and contrast
+   checkers read real text again instead of transparent glyphs. */
+#wordmark.is-solid .wm-second {
+  background: none;
+  color: var(--accent);
 }
 
 /* ---------- Intro overlay + wordmark layer ---------- */
