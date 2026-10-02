@@ -130,7 +130,11 @@ function syncNavHeight() {
   document.documentElement.style.setProperty("--nav-height", `${nav.offsetHeight}px`);
 }
 syncNavHeight();
-window.addEventListener("resize", syncNavHeight);
+let navSyncTimer; // resize fires per pixel: settle first, measure once
+window.addEventListener("resize", () => {
+  clearTimeout(navSyncTimer);
+  navSyncTimer = setTimeout(syncNavHeight, 150);
+});
 document.fonts.ready.then(syncNavHeight);
 
 // Stages plug in here, one call each. Stage modals reach Lenis
@@ -387,6 +391,9 @@ function initPhotoDepth() {
   window.addEventListener("mousemove", (event) => {
     // -0.5..0.5 across the viewport, flipped so the photo drifts
     // opposite the cursor (background recedes = depth).
+    gsap.set(heroPhoto, { willChange: "transform" }); // hint only while driven
+    clearTimeout(heroPhoto._idle);
+    heroPhoto._idle = setTimeout(() => gsap.set(heroPhoto, { willChange: "auto" }), 1500);
     const nx = event.clientX / window.innerWidth - 0.5;
     const ny = event.clientY / window.innerHeight - 0.5;
     xTo(-nx * CONFIG.photo.shift);
@@ -406,6 +413,8 @@ function initPhotoDepth() {
         start: "top top",
         end: "bottom top",
         scrub: true,
+        onToggle: (self) =>
+          gsap.set(heroPhotoImg, { willChange: self.isActive ? "transform" : "auto" }),
       },
     }
   );

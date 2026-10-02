@@ -116,8 +116,9 @@ export function initGallery() {
      power2 falloff, so growth feels smooth, never stepped.
      Neighbors get shoved outward so the big card never covers them. */
   let focusIndex = -1;
+  let railVisible = true; // IntersectionObserver parks the lens off-screen
   function updateLens() {
-    if (reduceMotion) return;
+    if (reduceMotion || !railVisible) return;
     const max = isMobile() ? LENS_MAX_MOBILE : LENS_MAX;
     const cx = window.innerWidth / 2;
     const range = geom.cardW * LENS_RANGE;
@@ -165,11 +166,13 @@ export function initGallery() {
   // Glide a card index to the exact center.
   function goTo(i, duration = 0.6) {
     const clamped = gsap.utils.clamp(0, cards.length - 1, Math.round(i));
+    gsap.set(track, { willChange: "transform" });
     gsap.to(track, {
       x: -clamped * geom.step,
       duration: reduceMotion ? 0 : duration,
       ease: "expo.out",
       overwrite: "auto",
+      onComplete: () => gsap.set(track, { willChange: "auto" }),
     });
     return clamped;
   }
@@ -191,8 +194,12 @@ export function initGallery() {
     zIndexBoost: false, // lens owns z-index, Draggable must not fight it
     onDrag: updateLens,
     onThrowUpdate: updateLens,
-    onPress: () => viewport.classList.add("is-dragging"),
+    onPress: () => {
+      viewport.classList.add("is-dragging");
+      gsap.set(track, { willChange: "transform" });
+    },
     onRelease: () => viewport.classList.remove("is-dragging"),
+    onThrowComplete: () => gsap.set(track, { willChange: "auto" }),
     onClick: (e) => {
       const card = e.target.closest(".rail-card");
       if (card) goTo(Number(card.dataset.i));
@@ -200,6 +207,11 @@ export function initGallery() {
   })[0];
 
   gsap.ticker.add(updateLens); // follows every motion source
+  // Park the lens when the rail is off-screen: 24 rect reads per
+  // frame is cheap, zero is cheaper. Entrance still paints on arrival.
+  new IntersectionObserver((entries) => {
+    railVisible = entries[0].isIntersecting;
+  }).observe(root);
 
   // Trackpad / shift-wheel moves the rail, page keeps the rest.
   // Lenis ignores horizontal gestures here (data-lenis-prevent-horizontal)
@@ -214,11 +226,13 @@ export function initGallery() {
       if (ax < 4 || ax <= ay * 2) return; // not ours: vertical, noise, diagonal
       e.preventDefault();
       const x = gsap.getProperty(track, "x") - e.deltaX * 1.5;
+      gsap.set(track, { willChange: "transform" });
       gsap.to(track, {
         x: gsap.utils.clamp(geom.minX, 0, reduceMotion ? x : Math.round(-x / geom.step) * -geom.step),
         duration: reduceMotion ? 0 : 0.4,
         ease: "power3.out",
         overwrite: "auto",
+        onComplete: () => gsap.set(track, { willChange: "auto" }),
       });
     },
     { passive: false }

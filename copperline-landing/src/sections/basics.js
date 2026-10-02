@@ -128,6 +128,8 @@ export function initBasics() {
           end: PIN_DISTANCE, // hold: float, merge, dock, stack, rest
           pin: true,         // freeze the section while scrubbing
           scrub: MOTION.SCRUB, // smooth catch-up, not rigid 1:1
+          onToggle: (self) =>
+            gsap.set([title, ...facts], { willChange: self.isActive ? "transform" : "auto" }),
         },
       });
 

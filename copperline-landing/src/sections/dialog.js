@@ -195,6 +195,8 @@ export function initDialog() {
           end: PIN_DISTANCE,
           pin: true,        // freeze the section while scrubbing
           scrub: MOTION.SCRUB, // smooth catch-up, not rigid 1:1
+          onToggle: (self) =>
+            gsap.set(dialog, { willChange: self.isActive ? "transform" : "auto" }),
         },
       });
 

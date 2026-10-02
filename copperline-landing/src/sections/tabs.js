@@ -229,6 +229,7 @@ export function initTabs() {
       gsap.set(pillState, { x0: m.x0, x1: m.x1 });
       paintPill();
     } else {
+      gsap.set(pill, { willChange: "transform, width" });
       gsap.to(pillState, {
         x0: m.x0,
         x1: m.x1,
@@ -236,6 +237,7 @@ export function initTabs() {
         ease: PILL_EASE, // short overshoot, neck bends along
         overwrite: "auto",
         onUpdate: paintPill,
+        onComplete: () => gsap.set(pill, { willChange: "auto" }),
       });
     }
     showPanel(i, instant);

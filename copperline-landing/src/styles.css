@@ -279,13 +279,13 @@ html.js-anim #wordmarkLayer { display: flex; }
 .hero-photo {
   position: absolute;
   inset: -6%;
-  will-change: transform; /* hint: this layer moves every mousemove */
+  /* will-change is set from JS while the cursor drives it. */
 }
 .hero-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  will-change: transform; /* scroll scale lives on the img itself */
+  /* will-change is set while its scroll zoom is pinned active. */
 }
 .orb {
   position: absolute;
@@ -325,17 +325,12 @@ html.js-anim #wordmarkLayer { display: flex; }
 /* ---------- Sections ---------- */
 .section { border-top: 1px solid var(--line); }
 .wrap { width: min(var(--wrap), 100% - 2rem); margin-inline: auto; padding-block: var(--section-pad); }
-.wrap.narrow { max-width: 48rem; }
 .section-title {
   font-size: var(--h2);
   letter-spacing: -0.03em;
   line-height: 1.05;
   max-width: 22ch;
 }
-
-/* Quote + CTA band + footer */
-.quote p { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
-.quote footer { margin-top: 1rem; color: var(--muted); font-size: var(--fs-bodysm); }
 
 /* ---------- About stage 3: feature dialog ---------- */
 /* Base = stacked static layout (mobile, reduced motion, no JS).
@@ -446,7 +441,7 @@ html.js-anim #wordmarkLayer { display: flex; }
     height: 80svh;
     margin: 0;
     overflow-y: auto;
-    will-change: transform, opacity;
+    /* will-change toggled by the pin trigger while scrubbing. */
   }
   .dlg-close {
     display: flex;
@@ -507,7 +502,6 @@ html.js-anim #wordmarkLayer { display: flex; }
   }
   .ow-lead, .ow-tail { flex: none; white-space: nowrap; }
   .ow-slot { flex: none; margin: 0; }
-  .ow-photo { will-change: transform; } /* scroll zoom target */
   .ow-bio { max-width: 56ch; margin-inline: auto; }
 }
 
@@ -584,7 +578,7 @@ html.js-anim #wordmarkLayer { display: flex; }
   .bb-fact {
     position: absolute;
     width: 230px;
-    will-change: transform, opacity;
+    /* will-change toggled by the pin trigger while scrubbing. */
   }
   .bb-title {
     position: absolute;
@@ -595,7 +589,7 @@ html.js-anim #wordmarkLayer { display: flex; }
     padding: 0;
     font-size: clamp(3rem, 8vw, 7rem);
     z-index: 2;
-    will-change: transform, opacity;
+    /* will-change toggled by the pin trigger while scrubbing. */
   }
   .bb-panel {
     position: absolute;
@@ -953,7 +947,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   gap: 20px; /* JS step math assumes this gap */
   align-items: center;
   width: max-content;
-  will-change: transform;
+  /* will-change is set while dragging or gliding. */
 }
 .rail-card { margin: 0; flex: none; outline: none; }
 .rail-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: var(--radius); }
@@ -1069,7 +1063,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   width: 0;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  will-change: transform, width;
+  /* will-change is set for the pill flight only. */
 }
 /* Neck: gooey bridge from pill to panel, drawn fresh every frame. */
 .tab-neck {

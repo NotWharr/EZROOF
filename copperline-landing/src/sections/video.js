@@ -48,7 +48,8 @@ export function initVideo() {
   root.querySelector(".vid-sub").textContent = CONTENT.sub;
   const player = root.querySelector(".vid-player");
   const video = root.querySelector(".vid-el");
-  video.src = CONTENT.video;
+  // Poster paints immediately (tiny file). The heavy video file
+  // attaches later via ensureSrc(), near the viewport or on demand.
   video.poster = CONTENT.poster;
 
   const bigBtn = root.querySelector(".vid-big");
@@ -89,7 +90,16 @@ export function initVideo() {
   let userInteracted = false; // flips on first pointer/key press
   let rafId = 0;
   let idleTimer;
-  let hovering = false;
+  let srcReady = false; // video file attached only near the viewport
+
+  /* Heavy file, far down the page: attach it when close (800px
+     margin), not at init. Poster still paints immediately. */
+  function ensureSrc() {
+    if (srcReady || video.error) return;
+    srcReady = true;
+    video.src = CONTENT.video;
+    video.load();
+  }
 
   function isPlaying() {
     return !video.paused && !video.ended;
@@ -103,6 +113,7 @@ export function initVideo() {
   }
   function togglePlay() {
     if (video.error) return;
+    ensureSrc(); // user asked: file must exist before playing
     if (video.ended) video.currentTime = 0;
     if (video.paused) video.play().catch(() => {}); // autoplay blocks land here
     else video.pause();
@@ -165,10 +176,21 @@ export function initVideo() {
     const visible = entries[0].isIntersecting;
     if (!visible) {
       video.pause(); // always rest when scrolled away
-    } else if (!reduceMotion && !userInteracted && video.paused && !video.error) {
+    } else if (!reduceMotion && !userInteracted && srcReady && video.paused && !video.error) {
       video.play().catch(() => {}); // muted autoplay, policies may veto
     }
   }, { threshold: 0.5 }).observe(player);
+  // Attach the file early (800px out) so autoplay never races it.
+  const nearObserver = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        ensureSrc();
+        nearObserver.disconnect(); // one shot, then out of the way
+      }
+    },
+    { rootMargin: "800px" }
+  );
+  nearObserver.observe(player);
 
   /* ---------- Control bar auto-hide ---------- */
   function showBar() {
@@ -186,8 +208,6 @@ export function initVideo() {
     if (isPlaying()) armIdleHide();
   });
   player.addEventListener("focusin", showBar);
-  player.addEventListener("mouseenter", () => (hovering = true));
-  player.addEventListener("mouseleave", () => (hovering = false));
 
   /* ---------- Click to play: big button, bar button, video ---------- */
   bigBtn.addEventListener("click", togglePlay);

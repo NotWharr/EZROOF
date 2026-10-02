@@ -9,11 +9,20 @@
       content="Copperline Plumbing: emergency repair, drains, water heaters and repipes with upfront pricing."
     />
 
-    <!-- Display + body font. Swap this one <link> to rebrand the type. -->
+    <!-- Display + body font. Swap this one <link> to rebrand the type.
+         Only the weights the page uses (400/600/700/800). The latin
+         700+800 file is preloaded: it paints the hero + CTAs first. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -59,7 +68,11 @@
         <div class="hero-visual" aria-hidden="true">
           <div class="hero-photo">
             <img
-              src="/src/assets/hero-bg.webp"
+              src="/src/assets/hero-bg-1280.webp"
+              srcset="/src/assets/hero-bg-768.webp 768w, /src/assets/hero-bg-1280.webp 1280w, /src/assets/hero-bg.webp 1672w"
+              sizes="100vw"
+              width="1280"
+              height="720"
               alt=""
               fetchpriority="high"
             />

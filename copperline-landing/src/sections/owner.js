@@ -98,6 +98,8 @@ export function initOwner() {
           end: PIN_DISTANCE,
           pin: true,        // freeze the section while scrubbing
           scrub: MOTION.SCRUB, // smooth catch-up, not rigid 1:1
+          onToggle: (self) =>
+            gsap.set(photo, { willChange: self.isActive ? "transform" : "auto" }),
         },
       });
 
