@@ -91,6 +91,76 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 const coarsePointer = window.matchMedia("(pointer: coarse)").matches; // touch devices
 let landed = false; // true once the wordmark is parked in the nav
 
+// Mobile-first: small screens and touch devices get a shortened intro
+// so content is interactive in ~2s instead of ~6s on a slow phone.
+const isMobileIntro =
+  window.matchMedia("(max-width: 767px)").matches || coarsePointer;
+if (isMobileIntro) {
+  CONFIG.intro.firstIn = 0.35;
+  CONFIG.intro.firstHold = 0.1;
+  CONFIG.intro.secondIn = 0.45;
+  CONFIG.intro.fullHold = 0.1;
+  CONFIG.intro.curtain = 0.7;
+  CONFIG.hero.duration = 0.5;
+  CONFIG.hero.stagger = 0.04;
+  CONFIG.swipe.duration = 0.3;
+  CONFIG.progress.fadeIn = 0.3;
+}
+
+// Intro lifecycle: exactly-once unlock. The fail-safe (registered right
+// after the scroll lock, before any section init runs) guarantees the
+// loading overlay can never strand the visitor, even if a section
+// module throws on some particular device.
+let introDone = false;
+let introTL = null;
+let revealsArmed = false;
+
+function safeInit(name, fn) {
+  try {
+    fn();
+  } catch (err) {
+    console.warn(`[init] ${name} skipped:`, err);
+  }
+}
+
+function armReveals() {
+  if (revealsArmed) return;
+  revealsArmed = true;
+  initScrollReveals();
+}
+
+// Last-resort landing: kill the timeline, park everything in its final
+// state, unlock scroll. Idempotent: safe to call twice or after success.
+function finishIntro() {
+  if (introDone) return;
+  introDone = true;
+  if (introTL) {
+    introTL.kill();
+    introTL = null;
+  }
+  try {
+    gsap.set("#wordmark .wm-first", { opacity: 1, y: 0 });
+    gsap.set(".wm-mask", { clipPath: "inset(0 0 0 0%)" });
+    gsap.set("#wordmark .wm-second", { x: 0, backgroundPosition: "0% 0" });
+    gsap.set(".hero-title, .hero-title *", { yPercent: 0, y: 0, opacity: 1 });
+    gsap.set(".eyebrow .mask-inner, .hero-sub .mask-inner, .hero-cta .mask-inner", {
+      yPercent: 0,
+    });
+    gsap.set(".hero-visual", { opacity: 1, scale: 1 });
+    gsap.set(".hero-ticks li", { opacity: 1, y: 0 });
+    gsap.set(".nav-links, .nav-right, .scroll-progress", { opacity: 1, y: 0 });
+    if (!landed) landWordmark();
+    intro.style.display = "none";
+    armReveals();
+  } finally {
+    try {
+      lenis.start();
+    } catch (_) {
+      document.documentElement.classList.remove("lenis-stopped");
+    }
+  }
+}
+
 // The traveling wordmark must not take keyboard focus mid-flight:
 // pointer-events ignore Tab, so park it out of the tab order until it lands.
 wordmark.setAttribute("tabindex", "-1");
@@ -108,6 +178,43 @@ lenis.stop();
 document.documentElement.classList.add("js-anim"); // allow overlay + layer to show
 history.scrollRestoration = "manual"; // browser must not restore old scroll pos
 window.scrollTo(0, 0);
+
+// Schedule the intro BEFORE any section init runs, so a throwing
+// section can never cancel the unlock. The fonts wait is shorter on
+// mobile: a fallback-font first paint beats a loading screen.
+if (reduceMotion) {
+  gsap.set("#wordmarkLayer", { opacity: 0 });
+  intro.style.display = "none";
+  document.fonts.ready.then(() => {
+    gsap.set("#wordmark .wm-first", { opacity: 1, y: 0 });
+    gsap.set(".wm-mask", { clipPath: "inset(0 0 0 0%)" });
+    gsap.set("#wordmark .wm-second", { x: 0, backgroundPosition: "0% 0" });
+    landWordmark();
+    gsap.set("#wordmarkLayer", { opacity: 1 });
+    gsap.set(progressBar, { opacity: 1 });
+    lenis.start();
+    introDone = true;
+    armReveals();
+  });
+} else {
+  const fontTimeout = isMobileIntro ? 800 : 1500;
+  Promise.race([
+    document.fonts.ready,
+    new Promise((resolve) => setTimeout(resolve, fontTimeout)),
+  ]).then(() => {
+    try {
+      runIntro();
+    } catch (err) {
+      console.warn("[intro] failed, landing directly:", err);
+      finishIntro();
+    }
+  });
+}
+
+// Absolute fail-safe: the overlay can never outlive this timer.
+setTimeout(() => {
+  if (!introDone) finishIntro();
+}, isMobileIntro ? 4500 : 7000);
 
 /* Anchor links: glide with Lenis instead of jumping. The wordmark
    is a link too, but its layer ignores clicks until it lands. */
@@ -142,8 +249,10 @@ window.addEventListener("resize", () => {
 });
 document.fonts.ready.then(syncNavHeight);
 
-// Stages plug in here, one call each. Stage modals reach Lenis
-// through window.__lenis to lock/unlock background scroll.
+// Stages plug in here, one call each. Each is guarded: a throwing
+// section can log and skip instead of stranding the intro (the
+// trigger + fail-safe above are already scheduled). Stage modals
+// reach Lenis through window.__lenis to lock/unlock background scroll.
 window.__lenis = lenis;
 
 // Scroll progress: transform-only fill driven by total page scroll.
@@ -161,14 +270,14 @@ gsap.to(progressFill, {
     scrub: reduceMotion ? true : 0.3, // reduced: follow exactly, no smoothing
   },
 });
-initBasics();
-initOwner();
-initDialog();
-initTabs();
-initNumbers();
-initGallery();
-initVideo();
-initFooter();
+safeInit("basics", initBasics);
+safeInit("owner", initOwner);
+safeInit("dialog", initDialog);
+safeInit("tabs", initTabs);
+safeInit("numbers", initNumbers);
+safeInit("gallery", initGallery);
+safeInit("video", initVideo);
+safeInit("footer", initFooter);
 
 // Pinned scroll distances depend on real layout, which shifts as
 // fonts and images arrive. Re-measure everything once settled.
@@ -232,34 +341,12 @@ window.addEventListener("resize", () => {
   }, 200);
 });
 
-/* ---------- 5. Reduced motion: skip the show, land the ending ---------- */
-if (reduceMotion) {
-  // Hide the layer until fonts are final, then land instantly.
-  // Script runs before first paint, so nobody sees this.
-  gsap.set("#wordmarkLayer", { opacity: 0 });
-  intro.style.display = "none";
-  document.fonts.ready.then(() => {
-    // Final colors immediately: mask open, wipe complete, no motion.
-    gsap.set("#wordmark .wm-first", { opacity: 1, y: 0 });
-    gsap.set(".wm-mask", { clipPath: "inset(0 0 0 0%)" });
-    gsap.set("#wordmark .wm-second", { x: 0, backgroundPosition: "0% 0" });
-    landWordmark();
-    gsap.set("#wordmarkLayer", { opacity: 1 });
-    gsap.set(progressBar, { opacity: 1 }); // no intro, no waiting
-    lenis.start();
-    initScrollReveals();
-  });
-} else {
-  // Wait for fonts so every measurement is exact.
-  // The timeout fallback keeps us safe if fonts hang.
-  Promise.race([
-    document.fonts.ready,
-    new Promise((resolve) => setTimeout(resolve, 1500)),
-  ]).then(runIntro);
-}
+/* Intro trigger + reduced-motion branch live near the top (Section 3),
+   scheduled before the section inits, with a fail-safe timeout. */
 
 /* ---------- 6. The master intro timeline (Phases 1-4) ---------- */
 function runIntro() {
+  if (introDone) return; // fail-safe already landed: never replay
   // Cut the headline into masked lines for the Phase 4 rise.
   // `mask: "lines"` wraps each line in an overflow-hidden div,
   // so text slides up from inside it. Guarded in case the
@@ -277,6 +364,7 @@ function runIntro() {
   gsap.set(".hero-ticks li", { opacity: 0, y: CONFIG.hero.y });
 
   const tl = gsap.timeline({ defaults: { ease: CONFIG.eases.soft } });
+  introTL = tl; // fail-safe can kill it from here on
 
   /* Phase 1: first half only. */
   tl.to("#wordmark .wm-first", { opacity: 1, y: 0, duration: CONFIG.intro.firstIn })
@@ -339,7 +427,7 @@ function runIntro() {
   );
 
   /* Phase 4: hero floats up, in order. */
-  tl.add(() => lenis.start(), "curtain+=0.65"); // scroll frees as the curtain lifts
+  tl.add(() => lenis.start(), isMobileIntro ? "curtain+=0.25" : "curtain+=0.65"); // scroll frees as the curtain lifts
   tl.to(".nav-links, .nav-right, .scroll-progress", { opacity: 1, y: 0, duration: CONFIG.progress.fadeIn }, ">");
   tl.fromTo(
     ".eyebrow .mask-inner",
@@ -380,7 +468,11 @@ function runIntro() {
     stagger: CONFIG.hero.stagger,
   }, "-=0.9");
 
-  tl.add(initScrollReveals); // arm the scroll sections once the hero lands
+  tl.add(() => {
+    armReveals(); // arm the scroll sections once the hero lands (exactly once)
+    introDone = true;
+    introTL = null;
+  });
 }
 
 /* ---------- 7. Hero photo depth (independent of the intro) ---------- */
