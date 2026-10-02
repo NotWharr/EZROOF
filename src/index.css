@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+/* Design tokens: the whole site reads from here. */
+@theme {
+  --color-ink: #09090b;
+  --color-surface: #131316;
+  --color-surface-2: #17171b;
+  --color-surface-3: #101013;
+  --color-paper: #f4f4f5;
+  --color-muted: #a1a1aa;
+  --color-accent: #acff46;
+  --color-accent-ink: #09090b;
+  --color-line: #27272a;
+  --color-track-soft: rgb(255 255 255 / 0.08);
+  --color-track: rgb(255 255 255 / 0.2);
+  --color-track-strong: rgb(255 255 255 / 0.35);
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --text-micro: 0.72rem;
+  --text-small: 0.85rem;
+  --text-bodysm: 0.9rem;
+  --text-h1: clamp(2.5rem, 6vw, 5rem);
+  --text-h2: clamp(1.75rem, 4vw, 3rem);
+
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-pill: 999px;
+  --radius-round: 50%;
+
+  --shadow-glow: 0 0 12px rgb(172 255 70 / 0.45);
+  --shadow-knob: 0 0 10px rgb(172 255 70 / 0.6);
+
+  --z-progress: 39;
+  --z-nav: 40;
+  --z-pill: 45;
+  --z-overlay: 50;
+  --z-layer: 60;
+  --z-full: 80;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis owns scrolling, not the browser */
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Lenis recommended rules: keep the page stable while it smooths scroll. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Screen-reader-only headings: keep heading order without visual noise. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Skip link: invisible until keyboard focus lands on it. */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  font-weight: 700;
+  font-size: var(--text-small);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-btn);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(-300%);
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.skip-link:focus-visible {
+  transform: none;
+  opacity: 1;
+}
+
+/* Masked rise: the wrapper crops, the inner slides up from below. */
+.mask {
+  display: block;
+  overflow: hidden;
+}
+.mask-inner {
+  display: block;
+}
+
+/* Gallery focus ring target. */
+.rail-card.is-focus .rail-frame {
+  border-color: var(--color-accent);
+}
+
+/* Landed wordmark: wipe complete, lock solid lime + clickable.
+   Same element throughout, no swap, no flicker. */
+.wordmark.is-solid .wm-second {
+  background: none;
+  color: var(--color-accent);
+}
+.wordmark.landed {
+  pointer-events: auto;
+}
+
+/* ---------- Video player ---------- */
+.vid-player:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+.vid-placeholder {
+  background: var(--color-surface);
+  border-radius: var(--radius-card, 16px);
+}
+.vid-player.is-full {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-full);
+  border-radius: 0;
+  border: 0;
+  background: #000;
+}
+.vid-error {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 5.5rem;
+  text-align: center;
+  color: var(--color-paper);
+  background: rgb(0 0 0 / 0.7);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+.vid-toast {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgb(0 0 0 / 0.7);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.vid-toast.is-on {
+  opacity: 1;
+}
+.vid-bar {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  transition: opacity 0.25s ease;
+}
+.vid-player.is-idle .vid-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+.vid-player.is-idle {
+  cursor: none;
+}
+.vid-track,
+.vid-buffered,
+.vid-played,
+.vid-hover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 4px;
+}
+.vid-track {
+  background: var(--color-track);
+}
+.vid-buffered {
+  background: var(--color-track-strong);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.vid-hover {
+  background: rgb(172 255 70 / 0.35);
+  opacity: 0;
+  width: 0;
+}
+.vid-scrub:hover .vid-hover {
+  opacity: 1;
+}
+.vid-played {
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.vid-handle {
+  position: absolute;
+  top: 50%;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  transform: translate(-50%, -50%);
+  box-shadow: var(--shadow-knob);
+}
+.vid-tip {
+  position: absolute;
+  bottom: 1.4rem;
+  transform: translateX(-50%);
+  background: rgb(0 0 0 / 0.85);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  padding: 0.15rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.vid-tip.is-on {
+  opacity: 1;
+}
+.vid-time {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.vid-vol {
+  width: 0;
+  opacity: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+  transition:
+    width 0.2s ease,
+    opacity 0.2s ease;
+}
+.vid-bar:focus-within .vid-vol,
+.vid-mute:hover + .vid-vol,
+.vid-vol:hover,
+.vid-vol:focus-visible {
+  width: 4.5rem;
+  opacity: 1;
+}
+.vid-mute .mute-x {
+  display: none;
+}
+.vid-mute.is-muted .mute-x {
+  display: block;
+}
+.vid-mute.is-muted .wav {
+  display: none;
+}
+
+/* Film grain: hand-rolled SVG turbulence as a data URI, fixed and
+   pointer-transparent so it never intercepts clicks or scroll. */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
