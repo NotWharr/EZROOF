@@ -68,7 +68,7 @@ export function initGallery() {
     frame.className = "rail-frame";
     const photo = document.createElement("img");
     photo.src = item.img;
-    photo.alt = `${item.job} in ${item.location}`;
+    photo.alt = ""; // figure already names job + location; avoids double reading
     photo.width = 520; // 2x display size, reserves space before load
     photo.height = 680;
     photo.loading = "lazy";

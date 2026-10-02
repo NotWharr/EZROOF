@@ -27,13 +27,14 @@
     />
   </head>
   <body>
+    <a class="skip-link" href="#top">Skip to content</a>
     <!-- ================= INTRO OVERLAY (Phase 1-3) ================= -->
     <!-- Hidden unless JS adds .js-anim to <html>, so no-JS visitors
          never get stuck behind it. The wordmark lives OUTSIDE the
          overlay in its own fixed layer, so the lifting curtain can
          never clip it or carry it away. -->
     <div id="intro" aria-hidden="true"></div>
-    <div id="wordmarkLayer" aria-hidden="false">
+    <div id="wordmarkLayer" aria-hidden="true">
       <!-- THE single wordmark element. It starts huge at screen center
            and physically travels + shrinks into the nav slot. It is
            also the home link once it lands (pointer events on). -->
@@ -148,7 +149,7 @@
           <div class="dlg-trail" aria-hidden="true"></div>
           <div class="dlg rise" role="dialog" aria-modal="true" aria-labelledby="dlgTitle" aria-hidden="true">
             <button type="button" class="dlg-close" aria-label="Close dialog"><span aria-hidden="true">×</span></button>
-            <h3 class="dlg-dialog-title dlg-piece" id="dlgTitle"></h3>
+            <h2 class="dlg-dialog-title dlg-piece" id="dlgTitle"></h2>
             <ul class="dlg-list"></ul>
             <a class="btn btn-primary dlg-cta dlg-piece" href="#contact">Get free estimate</a>
           </div>
@@ -161,6 +162,7 @@
            rendered from CONTENT in src/sections/tabs.js. -->
       <section id="about-tabs" class="section about-stage" aria-label="Credentials and values">
         <div class="wrap tabs-wrap">
+          <h2 class="visually-hidden">Credentials and values</h2>
           <div class="tabbar" role="tablist" aria-label="About Copperline">
             <span class="tab-pill" aria-hidden="true"></span>
           </div>
@@ -181,6 +183,7 @@
       <!-- Count-up stats row, once on enter. Copy is rendered from
            CONTENT in src/sections/numbers.js. -->
       <section id="about-numbers" class="section about-stage" aria-label="Copperline in numbers">
+        <h2 class="visually-hidden">Copperline in numbers</h2>
         <div class="wrap num-grid"></div>
       </section>
 

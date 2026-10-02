@@ -113,7 +113,12 @@ window.scrollTo(0, 0);
    is a link too, but its layer ignores clicks until it lands. */
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener("click", (event) => {
-    const target = document.querySelector(link.getAttribute("href"));
+    let target = null;
+    try {
+      target = document.querySelector(link.getAttribute("href"));
+    } catch (_) {
+      target = null; // malformed href: let the browser handle it
+    }
     if (!target) return;
     event.preventDefault();
     lenis.scrollTo(target);
@@ -210,6 +215,7 @@ function landWordmark() {
   landed = true;
   wordmark.classList.add("landed"); // clicks on, visuals untouched
   wordmark.removeAttribute("tabindex"); // keyboard can reach the logo now
+  document.getElementById("wordmarkLayer").removeAttribute("aria-hidden");
 }
 
 /* Window resized after landing? Clear the old transform, measure the
@@ -312,6 +318,7 @@ function runIntro() {
         landed = true;
         wordmark.classList.add("landed"); // clicks on, visuals untouched
         wordmark.removeAttribute("tabindex");
+        document.getElementById("wordmarkLayer").removeAttribute("aria-hidden");
       },
     },
     "curtain"
