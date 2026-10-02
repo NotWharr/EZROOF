@@ -163,7 +163,14 @@ html.js-anim #intro { display: block; }
   pointer-events: none; /* clicks pass through during the flight */
 }
 html.js-anim #wordmarkLayer { display: flex; }
-#wordmark { font-size: var(--wordmark-intro); }
+#wordmark { font-size: var(--wordmark-intro); position: relative; }
+/* Fat hit area without changing the measured box: the FLIP math
+   reads the element rect, which overflowing pseudos don't affect. */
+#wordmark::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+}
 /* Landed = parked in the nav slot. Only pointer events change here,
    nothing visual, so there is no swap and no flicker. */
 #wordmark.landed { pointer-events: auto; }
@@ -683,6 +690,10 @@ html.js-anim #wordmarkLayer { display: flex; }
   width: min(var(--wrap), 100% - 2rem);
   margin-inline: auto;
   padding: 4rem 0 2rem;
+  min-height: 100%; /* centers the composition so air never pools */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 /* 12-column grid: brand spans 4, link groups share the other 8. */
 .foot-grid {
@@ -709,7 +720,7 @@ html.js-anim #wordmarkLayer { display: flex; }
 .foot-socials a:hover { color: var(--accent); border-color: var(--accent); }
 .foot-socials svg { width: 1.1rem; height: 1.1rem; fill: currentColor; }
 .foot-nav { grid-column: 5 / 13; min-width: 0; } /* zero the automatic minimum or long links force overflow */
-.foot-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+.foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 1.5fr; gap: 2rem; }
 .foot-cols > * { min-width: 0; } /* let narrow columns shrink instead of overflowing */
 .foot-heading {
   font-size: var(--fs-micro);
@@ -740,14 +751,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   .foot-nav { grid-column: 1 / -1; }
 }
 
-/* Mobile: plain static footer, columns pair up. */
+/* Mobile: plain static footer, columns pair up. The 12-column
+   template retires here: its fixed gaps alone would force overflow. */
 @media (max-width: 767px) {
   .site-footer { height: auto; clip-path: none; }
   .foot-fixed { position: static; height: auto; overflow: visible; }
   .foot-glows { inset: 0; } /* no bleed on static layout: keeps page 100% wide */
-  .foot-brand { grid-column: 1 / -1; }
-  .foot-nav { grid-column: 1 / -1; }
-  .foot-cols { grid-template-columns: repeat(2, 1fr); }
+  .foot-grid { display: block; }
+  .foot-brand { margin-bottom: 2.5rem; }
+  .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ---------- How we work video ---------- */
@@ -1025,6 +1037,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   .rail-frame { width: 200px; height: 280px; }
   .rail-frame img { aspect-ratio: 200 / 280; }
   .rail-viewport { padding: 50px 0; }
+}
+/* Narrow player bar: time readout would starve the scrub strip,
+   so it yields (duration stays in the slider's aria-label). */
+@media (max-width: 480px) {
+  .vid-time { display: none; }
 }
 
 /* ---------- About stage 5: numbers ---------- */
