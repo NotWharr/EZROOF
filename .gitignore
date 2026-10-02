@@ -40,7 +40,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-copperline-landing/dist/
-copperline-landing/node_modules/
+# vite build output
+/dist/
+
 .playwright-mcp/
+
+# leftover locked install artifacts, do not commit
+/copperline-landing/
+
+
+# local agent tooling
+.agents/
+
+
+# vendored skill checkout, not project source
+ui-ux-pro-max-skill/
 

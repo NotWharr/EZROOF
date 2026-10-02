@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Copperline Landing
 
-## Getting Started
+A modern single-page landing page for **Copperline** (plumbing), built with
+**Vite + vanilla HTML/CSS/JS**, animated with **GSAP** (SplitText) and smoothed
+with **Lenis**. Opens with a lenis.dev style cinematic intro: half the brand
+name appears, the second half pushes in, the curtain lifts, and the wordmark
+lands in the nav.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd copperline-landing
+npm install
+npm run dev      # local server, usually http://localhost:5173
+npm run build    # production files go to dist/
+npm run preview  # preview the production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where to tweak things
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Want to change | File | What to edit |
+|---|---|---|
+| Brand name halves | `index.html` | The `.wm-first` / `.wm-second` spans (intro + nav logo must match) |
+| Colors, fonts, sizes | `src/styles.css` | The `:root` variables at the top |
+| Intro timing + eases | `src/main.js` | The `CONFIG` object (durations in seconds) |
+| Scroll feel | `src/main.js` | `CONFIG.lenis.lerp` (lower = floatier) |
+| Copy and sections | `index.html` + `src/sections/*.js` | Hero, About stages 1-5, video, gallery, CTA, footer (one `CONTENT` per stage file) |
+| Publish URLs | `index.html` | `copperline.example.com` + `og-cover.png` are placeholders; point at the real domain and cover image on launch |
+| Hero photo depth | `src/main.js` | `CONFIG.photo` (shift px, glide, zoom, drift); swap the file at `src/assets/hero-bg.webp` |
+| About stages + gallery + video | `src/sections/*.js` | One `CONTENT` object at the top of each stage file (`basics.js`, `owner.js` with photo at `src/assets/owner.webp`, `dialog.js`, `tabs.js`, `numbers.js`, `gallery.js` with photos at `src/assets/gallery/`, `video.js` with video at `src/assets/how-we-work.mp4`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How the intro works (short version)
 
-## Learn More
+1. **Phase 1** `Copper` fades up inside a full-screen overlay. `line` sits
+   clipped to zero width, so it takes up no space.
+2. **Phase 2** The clip opens with `power4.inOut`. Because the wordmark row is
+   centered flex, the growing `line` half physically pushes `Copper` left.
+3. **Phase 3** The code measures the wordmark and the invisible nav slot
+   with `getBoundingClientRect()` at curtain time, then moves the *same*
+   element (transform only: x, y, scale) onto the slot while the overlay
+   slides up on the same label, duration and ease. No duplicate, no swap.
+4. **Phase 4** Scrolling unlocks, hero lines rise out of overflow-hidden masks
+   (SplitText cuts the headline), nav links fade in last.
 
-To learn more about Next.js, take a look at the following resources:
+Scrolling stays locked (`lenis.stop()`) until Phase 4. Visitors with
+`prefers-reduced-motion` skip straight to the finished page.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Slow-motion frame check
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open the dev server with `?slowmo` appended
+(`http://localhost:5173/?slowmo`) to run the whole timeline at 0.2x and
+watch every frame of the wordmark flight. Remove the param for normal speed.
+Resizing after the landing re-parks the wordmark automatically.
