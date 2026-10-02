@@ -3,12 +3,13 @@
 import { useState } from "react";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
+import EstimateCta from "@/components/layout/EstimateCta";
+import { MapPin, Clock, ArrowsLeftRight } from "@phosphor-icons/react";
 
-// Project Data Type
 interface Project {
   id: number;
   title: string;
-  category: "Residential" | "Commercial" | "Storm Repair" | "Metal Roofing";
+  category: "Residential" | "Commercial" | "Drains" | "Water Heaters";
   description: string;
   location: string;
   date: string;
@@ -19,156 +20,148 @@ interface Project {
 const projectsData: Project[] = [
   {
     id: 1,
-    title: "Architectural Shingle Replacement",
+    title: "Galvanized to PEX repipe",
     category: "Residential",
-    description: "Complete tear-off of 25-year worn shingles replaced with Class 4 impact-resistant architectural shingles and synthetic underlayment.",
-    location: "Austin, TX",
-    date: "03-2026 / 04-2026",
-    beforeImg: "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=800&q=80",
-    afterImg: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+    description:
+      "Two bath home repiped in PEX with new stops, balanced pressure and drywall patches included.",
+    location: "Riverside",
+    date: "Mar 2026",
+    beforeImg:
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+    afterImg:
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 2,
-    title: "Standing Seam Metal Roof Retrofit",
-    category: "Metal Roofing",
-    description: "Upgraded a sagging asphalt roof to a 24-gauge custom matte black standing seam metal roofing system with hidden fasteners.",
-    location: "Dallas, TX",
-    date: "01-2026 / 02-2026",
-    beforeImg: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
-    afterImg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    title: "Tank to tankless swap",
+    category: "Water Heaters",
+    description:
+      "50 gallon tank replaced with a high efficiency tankless unit, new venting and gas line.",
+    location: "Westbrook",
+    date: "Jan 2026",
+    beforeImg:
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
+    afterImg:
+      "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 3,
-    title: "Commercial TPO Flat Roof Restoration",
+    title: "Restaurant drain rescue",
     category: "Commercial",
-    description: "Full single-ply 60-mil TPO membrane restoration over a 12,000 sq ft industrial facility, improving energy efficiency.",
-    location: "Houston, TX",
-    date: "11-2025 / 12-2025",
-    beforeImg: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=800&q=80",
-    afterImg: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+    description:
+      "Grease choked main cleared by hydro jetting, then a service plan to keep the kitchen open.",
+    location: "Milltown",
+    date: "Nov 2025",
+    beforeImg:
+      "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=800&q=80",
+    afterImg:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 4,
-    title: "Emergency Hail Storm Restoration",
-    category: "Storm Repair",
-    description: "Rapid emergency response following severe hail damage. Replaced OSB decking, ice & water shield, and ridge venting.",
-    location: "San Antonio, TX",
-    date: "02-2026 / 03-2026",
-    beforeImg: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
-    afterImg: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
+    title: "Trenchless sewer renewal",
+    category: "Drains",
+    description:
+      "Collapsed clay lateral relined trenchless in one day. Lawn untouched, flow restored.",
+    location: "Lakeshore",
+    date: "Feb 2026",
+    beforeImg:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
+    afterImg:
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 5,
-    title: "Luxury Slate & Tile Re-Roof",
+    title: "Bathroom rough in and trim",
     category: "Residential",
-    description: "Precision installation of synthetic slate tiles on a custom luxury villa, complete with copper valley flashings and gutters.",
-    location: "Fort Worth, TX",
-    date: "10-2025 / 12-2025",
-    beforeImg: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80",
-    afterImg: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+    description:
+      "Full rough in for a remodel plus fixture trim, pressure balanced and leak tested.",
+    location: "Hillcrest",
+    date: "Oct 2025",
+    beforeImg:
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80",
+    afterImg:
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 6,
-    title: "Industrial EPDM Membrane Overlay",
+    title: "Office restroom refit",
     category: "Commercial",
-    description: "Removed degraded tar & gravel roof and installed a seamless EPDM rubberized membrane system with new perimeter coping metal.",
-    location: "Waco, TX",
-    date: "08-2025 / 09-2025",
-    beforeImg: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
-    afterImg: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+    description:
+      "Four restroom cores refit with sensor flush valves and new carriers over one weekend.",
+    location: "Northside",
+    date: "Aug 2025",
+    beforeImg:
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+    afterImg:
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
   },
 ];
 
-// Individual Card Component with Before/After Slider
 function ProjectCard({ project }: { project: Project }) {
   const [sliderPos, setSliderPos] = useState<number>(50);
 
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group hover:border-neutral-700 transition-all duration-300">
-      
-      {/* Interactive Before/After Image Container */}
-      <div className="relative h-64 w-full overflow-hidden select-none">
-        
-        {/* "After" Image (Base background) */}
+    <article className="rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 flex flex-col">
+      <div className="relative h-64 w-full overflow-hidden select-none bg-zinc-950">
         <img
           src={project.afterImg}
-          alt={`${project.title} After`}
+          alt={`${project.title}, finished work`}
           className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
         />
-        <div className="absolute top-3 right-3 bg-neutral-950/80 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest text-emerald-400 border border-emerald-500/30">
-          After
-        </div>
-
-        {/* "Before" Image (Clipped overlay) */}
+        <img
+          src={project.beforeImg}
+          alt={`${project.title}, before work started`}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
+          loading="lazy"
+        />
         <div
-          className="absolute inset-0 overflow-hidden"
-          style={{ width: `${sliderPos}%` }}
+          className="absolute top-0 bottom-0 pointer-events-none"
+          style={{ left: `${sliderPos}%` }}
         >
-          <img
-            src={project.beforeImg}
-            alt={`${project.title} Before`}
-            className="absolute inset-0 w-full h-full object-cover max-w-none"
-            style={{ width: "100%", height: "100%" }}
-          />
-          <div className="absolute top-3 left-3 bg-neutral-950/80 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest text-[#d85a00] border border-[#d85a00]/30">
-            Before
-          </div>
+          <div className="absolute top-0 bottom-0 -left-px w-0.5 bg-[#acff46]" />
+          <span className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-[#acff46] rounded-xl flex items-center justify-center text-zinc-950">
+            <ArrowsLeftRight size={16} weight="bold" aria-hidden />
+          </span>
         </div>
-
-        {/* Vertical Divider Line */}
-        <div
-          className="absolute top-0 bottom-0 w-1 bg-[#d85a00] shadow-[0_0_10px_rgba(216,90,0,0.8)] pointer-events-none z-10"
-          style={{ left: `calc(${sliderPos}% - 2px)` }}
-        >
-          <div className="absolute top-1/2 -translate-y-1/2 -left-3.5 w-8 h-8 bg-[#d85a00] rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-            ↔
-          </div>
-        </div>
-
-        {/* Range Input Control */}
         <input
           type="range"
           min="0"
           max="100"
           value={sliderPos}
+          aria-label={`Reveal before and after for ${project.title}`}
           onChange={(e) => setSliderPos(Number(e.target.value))}
-          className="absolute inset-0 opacity-0 cursor-ew-resize w-full h-full z-20"
+          className="absolute inset-0 opacity-0 cursor-ew-resize w-full h-full"
         />
       </div>
-
-      {/* Card Body Information */}
-      <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-        <div className="space-y-2">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#d85a00]">
-            {project.category}
-          </div>
-          <h3 className="text-xl font-black uppercase text-white tracking-tight leading-snug">
-            {project.title}
-          </h3>
-          <p className="text-xs text-neutral-400 leading-relaxed">
-            {project.description}
-          </p>
-        </div>
-
-        {/* Metadata Details */}
-        <div className="pt-4 border-t border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400 font-semibold">
-          <div className="flex items-center gap-1.5">
-            <span>📍</span> {project.location}
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span>🕒</span> {project.date}
-          </div>
+      <div className="p-6 flex-1 flex flex-col">
+        <p className="font-mono text-xs text-[#acff46]">{project.category}</p>
+        <h2 className="mt-2 text-xl font-bold tracking-tight">{project.title}</h2>
+        <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{project.description}</p>
+        <div className="mt-4 pt-4 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
+          <span className="flex items-center gap-1.5">
+            <MapPin size={14} className="text-[#acff46]" aria-hidden />
+            {project.location}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Clock size={14} className="text-[#acff46]" aria-hidden />
+            {project.date}
+          </span>
         </div>
       </div>
-
-    </div>
+      <p className="px-6 pb-4 font-mono text-xs text-zinc-500">
+        Drag slider: left shows before, right shows after.
+      </p>
+    </article>
   );
 }
 
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
 
-  const categories = ["All", "Residential", "Commercial", "Storm Repair", "Metal Roofing"];
+  const categories = ["All", "Residential", "Commercial", "Drains", "Water Heaters"];
 
   const filteredProjects =
     activeCategory === "All"
@@ -176,34 +169,32 @@ export default function ProjectsPage() {
       : projectsData.filter((p) => p.category === activeCategory);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white selection:bg-orange-600 selection:text-white">
+    <main id="main-content" className="min-h-screen bg-zinc-950 text-zinc-100">
       <NavBar />
 
-      <section className="pt-32 pb-24 px-6 sm:px-12 lg:px-16 max-w-7xl mx-auto space-y-12">
-        {/* Header Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
-          <div className="lg:col-span-7 space-y-3">
-            <h1 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">
-              Discover Our Completed <span className="text-[#d85a00]">Projects</span>
-            </h1>
-          </div>
-          <div className="lg:col-span-5">
-            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
-              Every roof replacement we complete is a reflection of our commitment to structural durability, leak prevention, and premium craftsmanship. Drag the image sliders to view before & after transformations.
-            </p>
-          </div>
-        </div>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-10">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#acff46]">
+          Project gallery
+        </p>
+        <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.02] max-w-[20ch]">
+          Jobs that still run clean.
+        </h1>
+        <p className="mt-5 text-base leading-relaxed text-zinc-400 max-w-[60ch]">
+          Six recent jobs across every service we run. Drag each slider to
+          compare before and after.
+        </p>
 
-        {/* Filter Navigation Tabs */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-neutral-800 pb-6">
+        <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter projects">
           {categories.map((category) => (
             <button
               key={category}
+              type="button"
               onClick={() => setActiveCategory(category)}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+              aria-pressed={activeCategory === category}
+              className={`px-4 py-3.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] ${
                 activeCategory === category
-                  ? "bg-[#d85a00] text-white shadow-lg shadow-orange-600/20"
-                  : "bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700"
+                  ? "bg-[#acff46] text-zinc-950"
+                  : "bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-500 hover:text-white"
               }`}
             >
               {category}
@@ -211,14 +202,19 @@ export default function ProjectsPage() {
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
           {filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
+        {filteredProjects.length === 0 && (
+          <p className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center text-sm text-zinc-400">
+            No projects in this category yet. Check back soon or browse the full gallery.
+          </p>
+        )}
       </section>
 
+      <EstimateCta />
       <Footer />
     </main>
   );

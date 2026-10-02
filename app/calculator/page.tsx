@@ -4,238 +4,180 @@ import { useState } from "react";
 import Link from "next/link";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
+import { Phone } from "@phosphor-icons/react";
 
 export default function CalculatorPage() {
-  // Specs
-  const [squares, setSquares] = useState<number>(25); // 1 Sq = 100 sq ft
-  const [pitch, setPitch] = useState<number>(1.15); // Pitch factor
-  const [tearOffLayers, setTearOffLayers] = useState<number>(1); // Layer count
-  const [materialCost, setMaterialCost] = useState<number>(380); // Base cost/sq
+  const [jobBase, setJobBase] = useState<number>(189);
+  const [bathrooms, setBathrooms] = useState<number>(2);
+  const [fixtures, setFixtures] = useState<number>(1);
+  const [floorsAboveFirst, setFloorsAboveFirst] = useState<number>(0);
+  const [heaterSwap, setHeaterSwap] = useState<boolean>(false);
+  const [emergency, setEmergency] = useState<boolean>(false);
 
-  // Add-ons & Complexities
-  const [valleys, setValleys] = useState<number>(2);
-  const [dormers, setDormers] = useState<number>(0);
-  const [chimneys, setChimneys] = useState<number>(1);
-  const [skylights, setSkylights] = useState<number>(0);
-  const [ridgeVentFeet, setRidgeVentFeet] = useState<number>(40);
+  const extras =
+    Math.max(0, bathrooms - 1) * 140 +
+    fixtures * 95 +
+    floorsAboveFirst * 120 +
+    (heaterSwap ? 1650 : 0) +
+    (emergency ? 150 : 0);
 
-  // Math Calculations
-  const baseMaterialAndLabor = squares * materialCost * pitch;
-  const tearOffCost = squares * (tearOffLayers * 55); // ~$55 per sq per layer tear-off + disposal
-  const valleyCost = valleys * 150; // W-valley / Ice & water shield detailing
-  const dormerCost = dormers * 250; // Step flashing & custom cuts
-  const chimneyCost = chimneys * 350; // Counter flashing & cricket install
-  const skylightCost = skylights * 450; // Kit replacement & flashing
-  const ridgeVentCost = ridgeVentFeet * 12; // Shingle-over ridge vent per linear foot
-
-  const subtotal =
-    baseMaterialAndLabor +
-    tearOffCost +
-    valleyCost +
-    dormerCost +
-    chimneyCost +
-    skylightCost +
-    ridgeVentCost;
-
+  const subtotal = jobBase + extras;
   const lowEstimate = Math.round(subtotal * 0.92);
   const highEstimate = Math.round(subtotal * 1.08);
 
+  const fieldClass =
+    "w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#acff46] transition-colors";
+
   return (
-    <main className="min-h-screen bg-neutral-950 text-white selection:bg-orange-600 selection:text-white">
+    <main id="main-content" className="min-h-screen bg-zinc-950 text-zinc-100">
       <NavBar />
 
-      <section className="pt-32 pb-24 px-6 sm:px-12 lg:px-16 max-w-5xl mx-auto space-y-10">
-        {/* Page Header */}
-        <div className="text-center space-y-3">
-          <div className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-            Pro Roofing Tools
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">
-            Advanced Roof Estimator
-          </h1>
-          <p className="text-neutral-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-            Detailed parameter inputs tailored for contractors, adjusters, and trade professionals.
-          </p>
-        </div>
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-10">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#acff46]">
+          Cost estimator
+        </p>
+        <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.02]">
+          What will my plumbing cost?
+        </h1>
+        <p className="mt-5 text-base leading-relaxed text-zinc-400 max-w-[60ch]">
+          Pick your job and home details for a ballpark range. A free visit
+          turns it into a flat written quote.
+        </p>
+      </section>
 
-        {/* Calculator Card */}
-        <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
-          {/* Section 1: Core Dimensions & Slope */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#d85a00] border-b border-neutral-800 pb-2">
-              1. Area, Pitch & Tear-Off
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-10 space-y-10">
+          <div className="space-y-5">
+            <h2 className="text-lg font-bold tracking-tight border-b border-zinc-800 pb-3">
+              Job
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {/* Roof Squares */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">
-                  Total Squares (1 Sq = 100 sq ft)
+                <label htmlFor="job" className="block text-sm font-bold text-zinc-200">
+                  Service needed
+                </label>
+                <select
+                  id="job"
+                  value={jobBase}
+                  onChange={(e) => setJobBase(Number(e.target.value))}
+                  className={fieldClass}
+                >
+                  <option value={189}>Drain clearing, one line</option>
+                  <option value={240}>Fixture install, per visit</option>
+                  <option value={450}>Leak repair, accessible pipe</option>
+                  <option value={890}>Sewer camera and jetting</option>
+                  <option value={2400}>Repipe, per bathroom</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="bathrooms" className="block text-sm font-bold text-zinc-200">
+                  Bathrooms in the home
                 </label>
                 <input
+                  id="bathrooms"
                   type="number"
                   min={1}
-                  value={squares}
-                  onChange={(e) => setSquares(Math.max(1, Number(e.target.value)))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#d85a00]"
+                  value={bathrooms}
+                  onChange={(e) => setBathrooms(Math.max(1, Number(e.target.value)))}
+                  aria-describedby="bathrooms-help"
+                  className={fieldClass}
                 />
-              </div>
-
-              {/* Pitch */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">
-                  Roof Pitch / Steepness
-                </label>
-                <select
-                  value={pitch}
-                  onChange={(e) => setPitch(Number(e.target.value))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#d85a00]"
-                >
-                  <option value={1.0}>Flat / Low Slope (0/12 to 3/12)</option>
-                  <option value={1.15}>Standard Walkable (4/12 to 7/12)</option>
-                  <option value={1.35}>Steep Slope (8/12 to 10/12)</option>
-                  <option value={1.60}>Extreme / Mansard (11/12 to 12/12+)</option>
-                </select>
-              </div>
-
-              {/* Tear-Off Layers */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">
-                  Existing Tear-Off Layers
-                </label>
-                <select
-                  value={tearOffLayers}
-                  onChange={(e) => setTearOffLayers(Number(e.target.value))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#d85a00]"
-                >
-                  <option value={0}>Overlay (0 Layers — No Tear-off)</option>
-                  <option value={1}>1 Layer (Standard Asphalt/Metal)</option>
-                  <option value={2}>2 Layers (Double Layer Tear-off)</option>
-                  <option value={3}>3 Layers (Heavy Removal / Cedar Split)</option>
-                </select>
+                <p id="bathrooms-help" className="text-xs text-zinc-500">
+                  More bathrooms means more pipe, valves and testing time.
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Section 2: Material System */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#d85a00] border-b border-neutral-800 pb-2">
-              2. Roofing Material System
+          <div className="space-y-5">
+            <h2 className="text-lg font-bold tracking-tight border-b border-zinc-800 pb-3">
+              Details
             </h2>
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase text-neutral-300">
-                Material & Underlayment Grade
-              </label>
-              <select
-                value={materialCost}
-                onChange={(e) => setMaterialCost(Number(e.target.value))}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#d85a00]"
-              >
-                <option value={380}>
-                  3-Tab / Standard Architectural Shingles + Synthetic Felt ($380/sq)
-                </option>
-                <option value={480}>
-                  Class 4 Impact Resistant Architectural Shingles ($480/sq)
-                </option>
-                <option value={550}>
-                  Commercial TPO / EPDM Single-Ply Membrane ($550/sq)
-                </option>
-                <option value={750}>
-                  Standing Seam Metal (24-Gauge Snap-Lock) ($750/sq)
-                </option>
-                <option value={1100}>
-                  Synthetic Slate / Concrete Interlocking Tile ($1,100/sq)
-                </option>
-              </select>
-            </div>
-          </div>
-
-          {/* Section 3: Penetrations & Detail Features */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#d85a00] border-b border-neutral-800 pb-2">
-              3. Penetrations & Detail Features
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">Valleys</label>
+                <label htmlFor="fixtures" className="block text-sm font-bold text-zinc-200">
+                  Extra fixtures
+                </label>
                 <input
+                  id="fixtures"
                   type="number"
                   min={0}
-                  value={valleys}
-                  onChange={(e) => setValleys(Math.max(0, Number(e.target.value)))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#d85a00]"
+                  value={fixtures}
+                  onChange={(e) => setFixtures(Math.max(0, Number(e.target.value)))}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#acff46] transition-colors"
                 />
               </div>
-
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">Dormers</label>
+                <label htmlFor="floors" className="block text-sm font-bold text-zinc-200">
+                  Floors above first
+                </label>
                 <input
+                  id="floors"
                   type="number"
                   min={0}
-                  value={dormers}
-                  onChange={(e) => setDormers(Math.max(0, Number(e.target.value)))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#d85a00]"
+                  value={floorsAboveFirst}
+                  onChange={(e) => setFloorsAboveFirst(Math.max(0, Number(e.target.value)))}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#acff46] transition-colors"
                 />
               </div>
-
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">Chimneys</label>
-                <input
-                  type="number"
-                  min={0}
-                  value={chimneys}
-                  onChange={(e) => setChimneys(Math.max(0, Number(e.target.value)))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#d85a00]"
-                />
+                <span id="toggles-label" className="block text-sm font-bold text-zinc-200">
+                  Add ons
+                </span>
+                <div className="space-y-3 pt-1" role="group" aria-labelledby="toggles-label">
+                  <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={heaterSwap}
+                      onChange={(e) => setHeaterSwap(e.target.checked)}
+                      className="w-4 h-4 accent-[#acff46] cursor-pointer"
+                    />
+                    Heater swap too
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={emergency}
+                      onChange={(e) => setEmergency(e.target.checked)}
+                      className="w-4 h-4 accent-[#acff46] cursor-pointer"
+                    />
+                    Emergency callout
+                  </label>
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">Skylights</label>
-                <input
-                  type="number"
-                  min={0}
-                  value={skylights}
-                  onChange={(e) => setSkylights(Math.max(0, Number(e.target.value)))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#d85a00]"
-                />
-              </div>
-
-              <div className="col-span-2 sm:col-span-1 space-y-2">
-                <label className="text-xs font-bold uppercase text-neutral-300">Ridge Vent (ft)</label>
-                <input
-                  type="number"
-                  min={0}
-                  value={ridgeVentFeet}
-                  onChange={(e) => setRidgeVentFeet(Math.max(0, Number(e.target.value)))}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#d85a00]"
-                />
+              <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-4 text-xs text-zinc-500 leading-relaxed">
+                Extras priced per fixture and floor. Emergency adds a flat
+                dispatch fee, quoted before we roll.
               </div>
             </div>
           </div>
 
-          {/* Output Display */}
-          <div className="pt-8 border-t border-neutral-800 space-y-6">
-            <div className="bg-neutral-950 border border-[#d85a00]/30 rounded-2xl p-6 text-center space-y-3">
-              <span className="text-xs font-bold uppercase tracking-widest text-neutral-400">
-                Estimated Project Range
-              </span>
-              <div className="text-3xl sm:text-5xl font-black text-[#d85a00] tracking-tight">
-                ${lowEstimate.toLocaleString()} – ${highEstimate.toLocaleString()}
-              </div>
-              <p className="text-xs text-neutral-500 max-w-xl mx-auto leading-relaxed">
-                Includes labor, tear-off disposal, underlayment, starter strips, ridge cap, and flashing details. Excludes OSB deck replacement if dry rot is discovered.
+          <div className="pt-8 border-t border-zinc-800">
+            <div className="rounded-2xl bg-zinc-950 border border-[#acff46]/40 p-6 sm:p-8 text-center">
+              <p className="font-mono text-xs text-zinc-400">Estimated project range</p>
+              <p className="mt-2 font-mono text-3xl sm:text-5xl font-bold text-[#acff46] tracking-tight">
+                ${lowEstimate.toLocaleString()} - ${highEstimate.toLocaleString()}
+              </p>
+              <p className="mx-auto mt-3 text-xs text-zinc-500 max-w-xl leading-relaxed">
+                Covers labor, parts, testing and cleanup. Hidden damage found
+                mid job is quoted separately before we proceed.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <div className="mt-6 flex flex-col sm:flex-row items-center gap-4">
               <Link
                 href="/contact"
-                className="w-full sm:w-auto bg-[#d85a00] hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl text-center transition-all shadow-lg hover:shadow-orange-600/20"
+                className="w-full sm:w-auto inline-flex items-center justify-center bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-8 py-4 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
               >
-                Submit Details for Official Bid →
+                Get Free Estimate
               </Link>
-              <span className="text-xs text-neutral-400">
-                Need an on-site inspection? Call us directly: <a href="tel:+18005550199" className="text-white underline">+1 (800) 555-0199</a>
-              </span>
+              <a
+                href="tel:+15550147663"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-200 hover:text-white transition-colors"
+              >
+                <Phone size={16} weight="bold" className="text-[#acff46]" aria-hidden />
+                Questions? Call (555) 014-7663
+              </a>
             </div>
           </div>
         </div>

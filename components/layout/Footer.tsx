@@ -1,74 +1,91 @@
 import Link from "next/link";
+import { Phone, Envelope, MapPin } from "@phosphor-icons/react/dist/ssr";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f0f0f] text-white py-16 px-6 sm:px-12 md:px-20 border-t border-neutral-900">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16">
-          {/* Column 1: Brand */}
-          <div className="md:col-span-5 space-y-3">
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-white uppercase font-sans">
-              EZROOF
-            </h2>
-            <p className="text-neutral-400 text-sm sm:text-base max-w-sm leading-relaxed font-normal">
-              Roofing systems built with grit, precision, and pride.
+    <footer className="bg-zinc-950 text-white border-t border-zinc-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          <div className="md:col-span-5">
+            <p className="font-bold text-3xl tracking-tight uppercase">
+              Copper<span className="text-[#acff46]">line</span>
             </p>
+            <p className="mt-3 text-sm text-zinc-400 leading-relaxed max-w-sm">
+              Repairs, drains, water heaters and repipes for homes and
+              businesses. Flowing right since 1999.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-6 inline-flex items-center justify-center bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-6 py-3 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+            >
+              Get Free Estimate
+            </Link>
           </div>
 
-          {/* Column 2: Contact */}
-          <div className="md:col-span-3 space-y-3">
-            <h3 className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-              CONTACT
-            </h3>
-            <ul className="space-y-1.5 text-sm sm:text-base font-medium text-white">
+          <nav className="md:col-span-3" aria-label="Footer">
+            <h2 className="text-sm font-bold text-zinc-400">
+              Company
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm font-semibold">
               <li>
-                <a 
-                  href="tel:5550147663" 
-                  className="hover:text-[#d85a00] transition-colors"
-                >
-                  (555) 014-ROOF
-                </a>
+                <Link href="/about" className="text-zinc-300 hover:text-white transition-colors">
+                  About us
+                </Link>
               </li>
               <li>
-                <a 
-                  href="mailto:hello@ezroof.com" 
-                  className="hover:text-[#d85a00] transition-colors"
-                >
-                  hello@ezroof.com
-                </a>
+                <Link href="/projects" className="text-zinc-300 hover:text-white transition-colors">
+                  Projects
+                </Link>
               </li>
-              <li className="text-neutral-300">
-                2400 Industrial Way, Riverside
+              <li>
+                <Link href="/calculator" className="text-zinc-300 hover:text-white transition-colors">
+                  Cost estimator
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-zinc-300 hover:text-white transition-colors">
+                  Terms
+                </Link>
               </li>
             </ul>
-          </div>
+          </nav>
 
-          {/* Column 3: Hours */}
-          <div className="md:col-span-4 space-y-3">
-            <h3 className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-              HOURS
-            </h3>
-            <ul className="space-y-1.5 text-sm sm:text-base font-medium text-white">
-              <li className="flex gap-4">
-                <span className="w-24 text-neutral-300">MON–FRI</span>
-                <span>7AM–6PM</span>
+          <div className="md:col-span-4">
+            <h2 className="text-sm font-bold text-zinc-400">
+              Reach us
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm">
+              <li>
+                <a
+                  href="tel:+15550147663"
+                  className="flex items-center gap-2 font-semibold text-white hover:text-[#acff46] transition-colors"
+                >
+                  <Phone size={16} className="text-[#acff46]" aria-hidden />
+                  (555) 014-7663
+                </a>
               </li>
-              <li className="flex gap-4">
-                <span className="w-24 text-neutral-300">SATURDAY</span>
-                <span>8AM–2PM</span>
+              <li>
+                <a
+                  href="mailto:hello@copperline.com"
+                  className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+                >
+                  <Envelope size={16} className="text-[#acff46]" aria-hidden />
+                  hello@copperline.com
+                </a>
               </li>
-              <li className="text-white font-semibold pt-1">
-                24/7 EMERGENCY RESPONSE
+              <li className="flex items-center gap-2 text-zinc-300">
+                <MapPin size={16} className="text-[#acff46]" aria-hidden />
+                2400 Industrial Way, Riverside
               </li>
+              <li className="text-zinc-400">Mon-Fri 7AM-6PM, Sat 8AM-2PM</li>
+              <li className="font-bold text-white">Burst pipe line open 24/7</li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-neutral-900/50">
-          <p className="text-xs font-medium tracking-widest text-neutral-500 uppercase">
-            © 2026 EZROOF. BUILT FOR THE LONG HAUL.
-          </p>
+        <div className="mt-12 pt-6 border-t border-zinc-800 flex flex-col sm:flex-row justify-between gap-2">
+          <p className="text-xs text-zinc-500">© 2026 Copperline Plumbing. Concept website, not a real business.</p>
+          <p className="text-xs text-zinc-500">Licensed, bonded and insured.</p>
         </div>
       </div>
     </footer>

@@ -1,61 +1,55 @@
 import Link from "next/link";
+import { Phone, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 export default function Hero() {
   return (
-    <section className="relative w-full min-h-screen flex flex-col justify-between bg-neutral-900 text-white overflow-hidden pt-24 pb-12 px-6 sm:px-12 lg:px-16">
-      {/* Background Image & Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1632759145351-1d592919f522?auto=format&fit=crop&q=80&w=2000"
-          alt="Roofing construction site"
-          className="w-full h-full object-cover object-center opacity-40 brightness-75"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/60" />
-      </div>
-
-      {/* Main Hero Content Grid */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full my-auto pt-16">
-        
-        {/* Top Typography Section */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start mb-16">
-          {/* Left Side: Brand Phrase */}
-          <div className="md:col-span-5 flex items-start gap-4">
-            <div className="w-8 h-8 bg-[#d85a00] flex-shrink-0 flex items-center justify-center transform rotate-45 mt-1">
-              <span className="text-white font-bold -rotate-45 text-sm">/</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight leading-tight text-white/90">
-              From Inspection <br className="hidden sm:inline" /> to Protection.
+    <section className="relative w-full bg-zinc-950 text-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-10 lg:pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <div className="lg:col-span-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#acff46]">
+              Licensed plumbing contractor
+            </p>
+            <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.02] text-white">
+              Fixed right on the first visit.
             </h1>
+            <p className="mt-5 text-base leading-relaxed text-zinc-400 max-w-[52ch]">
+              Repairs, drains, water heaters and full repipes with upfront
+              pricing and a 5-year labor warranty.
+            </p>
+            <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-6 py-3.5 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+              >
+                Get Free Estimate
+                <ArrowRight size={16} weight="bold" aria-hidden />
+              </Link>
+              <a
+                href="tel:+15550147663"
+                className="inline-flex items-center justify-center gap-2 border border-zinc-700 hover:border-zinc-400 text-white font-semibold text-sm px-6 py-3.5 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+              >
+                <Phone size={16} weight="bold" className="text-[#acff46]" aria-hidden />
+                (555) 014-7663
+              </a>
+            </div>
           </div>
 
-          {/* Right Side: Primary Headline */}
-          <div className="md:col-span-7">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight leading-tight text-white">
-              Residential & Commercial <br /> Roofing Infrastructure.
-            </h2>
-          </div>
-        </div>
-
-        {/* Divider Line */}
-        <div className="w-full h-[1px] bg-white/20 mb-8" />
-
-        {/* Bottom Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-          <div className="md:col-span-4">
-            <p className="text-sm tracking-wide text-neutral-300 font-light">
-              Built for the Long Haul
+          <div className="lg:col-span-6 w-full">
+            <div className="rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900">
+              <img
+                src="https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&q=80&w=1400"
+                alt="Plumber tightening a fitting under a kitchen sink"
+                className="w-full h-[300px] sm:h-[400px] lg:h-[460px] object-cover"
+                loading="eager"
+                fetchPriority="high"
+              />
+            </div>
+            <p className="mt-3 text-sm text-zinc-500">
+              Trap replacement in progress, photographed on site.
             </p>
           </div>
-
-          <div className="md:col-span-4 space-y-6">
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal max-w-md">
-              Built for property owners who can't risk leaks, structural damage, 
-              or project delays. Engineered craftsmanship backed by lifetime warranties.
-            </p>
-           
-          </div>
         </div>
-
       </div>
     </section>
   );
