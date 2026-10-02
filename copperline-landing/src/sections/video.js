@@ -270,6 +270,18 @@ export function initVideo() {
   /* ---------- Keyboard shortcuts (focused or hovered only) ---------- */
   player.addEventListener("keydown", (e) => {
     const k = e.key;
+    // The scrub strip owns its keys end to end; doubling them here
+    // would seek twice per press.
+    if (e.target.closest(".vid-scrub")) return;
+    // Native controls handle their own keys: Space/Enter/arrows on a
+    // focused button, link or slider must not ALSO fire shortcuts
+    // (Space on Play would toggle twice and cancel itself out).
+    if (
+      e.target.closest("button, input, a") &&
+      [" ", "Enter", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(k)
+    ) {
+      return;
+    }
     const handled = [" ", "k", "m", "f", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(k) || /^[0-9]$/.test(k);
     if (!handled) return;
     e.preventDefault(); // Space/arrows must not scroll the page

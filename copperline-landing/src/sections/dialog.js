@@ -114,8 +114,8 @@ export function initDialog() {
     tl.to(overlay, { opacity: 1, duration: 0.3 * d, ease: "power2.out" }, 0)
       .fromTo(
         dialog,
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.4 * d, ease: "power3.out" },
+        { y: 60, autoAlpha: 0 }, // autoAlpha hides from keyboard too
+        { y: 0, autoAlpha: 1, duration: 0.4 * d, ease: "power3.out" },
         0.05 * d
       )
       .fromTo(trail, { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 * d, ease: "power3.out" }, 0.1 * d)
@@ -138,13 +138,14 @@ export function initDialog() {
     };
     if (reduceMotion) {
       gsap.set([overlay, dialog, trail], { opacity: 0 });
+      gsap.set(dialog, { autoAlpha: 0 });
       gsap.set(".dlg-piece", { opacity: 0 });
       done();
       return;
     }
     gsap.timeline({ onComplete: done })
       .to(".dlg-piece", { opacity: 0, y: 10, duration: 0.2, ease: "power2.in" })
-      .to(dialog, { opacity: 0, y: 30, duration: 0.25, ease: "power2.in" }, "-=0.1")
+      .to(dialog, { autoAlpha: 0, y: 30, duration: 0.25, ease: "power2.in" }, "-=0.1")
       .to([trail, overlay], { opacity: 0, duration: 0.25 }, "-=0.15");
   }
 
@@ -207,8 +208,8 @@ export function initDialog() {
         /* 2. Dialog rises fast with a snappy ease, even scrubbed. */
         .fromTo(
           dialog,
-          { y: 60, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: MOTION.EASE_SNAP },
+          { y: 60, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.4, ease: MOTION.EASE_SNAP },
           "-=0.15"
         )
         /* 3. Lime trail chases it upward from below. */
@@ -227,7 +228,7 @@ export function initDialog() {
         )
         .to({}, { duration: 0.5 }) // hold: read the promise
         /* 5. All fades out, page continues. Tile waits underneath. */
-        .to(dialog, { y: -30, opacity: 0, duration: 0.4, ease: MOTION.EASE_NONE })
+        .to(dialog, { y: -30, autoAlpha: 0, duration: 0.4, ease: MOTION.EASE_NONE })
         .to(
           [trail, overlay],
           { opacity: 0, backdropFilter: "blur(0px)", duration: 0.4, ease: MOTION.EASE_NONE },

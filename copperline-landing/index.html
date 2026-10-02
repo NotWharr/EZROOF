@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Copperline Plumbing - Fixed right on the first visit</title>
+    <meta
+      name="description"
+      content="Copperline Plumbing: emergency repair, drains, water heaters and repipes with upfront pricing."
+    />
+
+    <!-- Display + body font. Swap this one <link> to rebrand the type. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ================= INTRO OVERLAY (Phase 1-3) ================= -->
+    <!-- Hidden unless JS adds .js-anim to <html>, so no-JS visitors
+         never get stuck behind it. The wordmark lives OUTSIDE the
+         overlay in its own fixed layer, so the lifting curtain can
+         never clip it or carry it away. -->
+    <div id="intro" aria-hidden="true"></div>
+    <div id="wordmarkLayer" aria-hidden="false">
+      <!-- THE single wordmark element. It starts huge at screen center
+           and physically travels + shrinks into the nav slot. It is
+           also the home link once it lands (pointer events on). -->
+      <a href="#top" id="wordmark" class="wordmark" aria-label="Copperline home"><span class="wm-first">Copper</span><span class="wm-mask"><span class="wm-second">line</span></span></a>
+    </div>
+
+    <!-- ================= NAV ================= -->
+    <!-- Centered logo. Left and right link groups fade in last (Phase 4). -->
+    <header id="nav">
+      <nav class="nav-links nav-left" aria-label="Primary left">
+        <a href="#work">Work</a>
+      </nav>
+
+      <!-- Invisible slot that reserves the centered nav space and gives
+           the wordmark an exact landing rect to measure. It is never
+           shown and never swapped with anything. -->
+      <div class="nav-logo-slot" aria-hidden="true"><span>Copperline</span></div>
+
+      <div class="nav-right">
+        <a href="#contact" class="btn btn-primary btn-small">Get free estimate</a>
+      </div>
+    </header>
+
+    <!-- Scroll progress: decorative fill driven by total page scroll. -->
+    <div class="scroll-progress" role="progressbar" aria-hidden="true"><span class="scroll-progress-fill"></span></div>
+
+    <main id="top">
+      <!-- ================= HERO ================= -->
+      <section class="hero">
+        <!-- Soft background visual: photo depth layer, glow orb, grid,
+             and a vignette that fuses them into one lit scene. -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-photo">
+            <img
+              src="/src/assets/hero-bg.webp"
+              alt=""
+              fetchpriority="high"
+            />
+          </div>
+          <div class="orb"></div>
+          <div class="gridlines"></div>
+          <div class="hero-scrim"></div>
+          <div class="vignette"></div>
+        </div>
+
+        <div class="hero-inner">
+          <p class="eyebrow mask"><span class="mask-inner">Licensed plumbing contractor</span></p>
+
+          <!-- SplitText cuts this into masked lines at runtime. -->
+          <h1 class="hero-title">Water where you want it. Gone when you don't.</h1>
+
+          <p class="hero-sub mask"><span class="mask-inner">Repairs, drains, heaters and repipes with upfront pricing and a 5-year labor warranty.</span></p>
+
+          <div class="hero-cta mask"><span class="mask-inner hero-cta-inner">
+            <a href="#contact" class="btn btn-primary">Get free estimate</a>
+            <a href="tel:+15550147663" class="btn btn-ghost">Call (555) 014-7663</a>
+          </span></div>
+
+          <ul class="hero-ticks">
+            <li>90 min emergency response</li>
+            <li>Flat written quotes</li>
+            <li>5-year labor warranty</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT / STAGE 1: BUSINESS BASICS ================= -->
+      <!-- Desktop: pinned scrub (float, merge, dock, stack). Mobile and
+           reduced motion: same content, stacked and static. Copy is
+           rendered from CONTENT in src/sections/basics.js. -->
+      <section id="about-basics" class="section about-stage" aria-label="About Copperline">
+        <div class="bb-scatter"></div>
+        <h2 class="bb-title rise"><span class="bb-title-text"></span></h2>
+        <div class="bb-panel">
+          <div class="bb-slot" aria-hidden="true"></div>
+          <div class="bb-details"></div>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT / STAGE 2: THE OWNER ================= -->
+      <!-- Desktop: pinned scrub (slot opens, photo settles, bio rises).
+           Mobile and reduced motion: stacked and static. Copy is
+           rendered from CONTENT in src/sections/owner.js. -->
+      <section id="about-owner" class="section about-stage" aria-label="About the owner">
+        <div class="wrap ow-inner">
+          <h2 class="ow-headline rise">
+            <span class="ow-lead"></span><span class="ow-slot"><img class="ow-photo" alt="" /></span><span class="ow-tail"></span>
+          </h2>
+          <div class="ow-bio"></div>
+          <blockquote class="ow-quote"></blockquote>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT / STAGE 3: FEATURE DIALOG ================= -->
+      <!-- Desktop: pinned scrub (dim, rise, trail, stagger, release).
+           The tile also opens the same dialog as a real modal.
+           Mobile and reduced motion: stacked and static. Copy is
+           rendered from CONTENT in src/sections/dialog.js. -->
+      <section id="about-dialog" class="section about-stage" aria-label="Our promise">
+        <div class="dlg-pin">
+          <div class="wrap dlg-center">
+            <button type="button" class="dlg-tile rise" aria-haspopup="dialog">
+              <span class="dlg-tile-title"></span>
+              <span class="dlg-tile-hint"></span>
+            </button>
+          </div>
+          <div class="dlg-overlay"></div>
+          <div class="dlg-trail" aria-hidden="true"></div>
+          <div class="dlg rise" role="dialog" aria-modal="true" aria-labelledby="dlgTitle" aria-hidden="true">
+            <button type="button" class="dlg-close" aria-label="Close dialog"><span aria-hidden="true">×</span></button>
+            <h3 class="dlg-dialog-title dlg-piece" id="dlgTitle"></h3>
+            <ul class="dlg-list"></ul>
+            <a class="btn btn-primary dlg-cta dlg-piece" href="#contact">Get free estimate</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT / STAGE 4: TABS ================= -->
+      <!-- Desktop: pinned, scroll auto-advances the tabs.
+           Mobile and reduced motion: stacked and static. Copy is
+           rendered from CONTENT in src/sections/tabs.js. -->
+      <section id="about-tabs" class="section about-stage" aria-label="Credentials and values">
+        <div class="wrap tabs-wrap">
+          <div class="tabbar" role="tablist" aria-label="About Copperline">
+            <span class="tab-pill" aria-hidden="true"></span>
+          </div>
+          <svg class="tab-neck" aria-hidden="true">
+            <defs>
+              <linearGradient id="neckGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#acff46" stop-opacity="0.55" />
+                <stop offset="1" stop-color="#acff46" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path class="tab-neck-path" d="" />
+          </svg>
+          <div class="tab-panels"></div>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT / STAGE 5: NUMBERS ================= -->
+      <!-- Count-up stats row, once on enter. Copy is rendered from
+           CONTENT in src/sections/numbers.js. -->
+      <section id="about-numbers" class="section about-stage" aria-label="Copperline in numbers">
+        <div class="wrap num-grid"></div>
+      </section>
+
+      <!-- ================= HOW WE WORK VIDEO ================= -->
+      <!-- Pinned scrub entrance on desktop, custom player, Flip
+           fullscreen. Copy + media from CONTENT in
+           src/sections/video.js. -->
+      <section id="how-we-work" class="section" aria-label="How we work video">
+        <div class="wrap vid-head rise">
+          <p class="eyebrow vid-eyebrow"></p>
+          <h2 class="section-title vid-title"></h2>
+          <p class="vid-sub"></p>
+        </div>
+        <div class="wrap vid-stage">
+          <div class="vid-player" id="vidPlayer" role="region" aria-label="Video player" tabindex="0">
+            <video class="vid-el" muted playsinline preload="metadata"></video>
+            <div class="vid-spinner" aria-hidden="true"><span></span></div>
+            <button type="button" class="vid-big" aria-label="Play video">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+            </button>
+            <p class="vid-error" hidden></p>
+            <div class="vid-toast" aria-hidden="true"></div>
+            <div class="vid-bar">
+              <button type="button" class="vid-play" aria-label="Play">
+                <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+                <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+              </button>
+              <div class="vid-scrub" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext="0:00 of 0:00">
+                <span class="vid-track"></span>
+                <span class="vid-buffered"></span>
+                <span class="vid-hover"></span>
+                <span class="vid-played"></span>
+                <span class="vid-handle"></span>
+                <span class="vid-tip"></span>
+              </div>
+              <span class="vid-time">0:00 / 0:00</span>
+              <button type="button" class="vid-mute" aria-label="Mute">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4z" /><path class="wav" d="M16 8a5 5 0 010 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /><line class="mute-x" x1="16" y1="9" x2="21" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" /><line class="mute-x" x1="21" y1="9" x2="16" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+              </button>
+              <input type="range" class="vid-vol" min="0" max="100" value="80" aria-label="Volume" />
+              <button type="button" class="vid-full" aria-label="Fullscreen">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= GALLERY / LENS RAIL ================= -->
+      <!-- Draggable photo rail with a center magnifier lens. Cards,
+           captions and arrows render from CONTENT in
+           src/sections/gallery.js. Takes id="work" so the nav
+           Work link lands here. -->
+      <section id="work" class="section" aria-label="Recent work gallery">
+        <div class="wrap rail-head">
+          <div>
+            <p class="eyebrow rail-eyebrow"></p>
+            <h2 class="section-title rail-title"></h2>
+          </div>
+          <div class="rail-arrows">
+            <button type="button" class="rail-prev" aria-label="Previous photo">&#8592;</button>
+            <button type="button" class="rail-next" aria-label="Next photo">&#8594;</button>
+          </div>
+        </div>
+        <div class="rail-viewport" role="region" aria-label="Draggable photo gallery" data-lenis-prevent-horizontal>
+          <div class="rail-track"></div>
+        </div>
+        <div class="wrap rail-foot">
+          <div class="rail-progress" aria-hidden="true"><span class="rail-progress-fill"></span></div>
+        </div>
+        <p class="drag-pill" aria-hidden="true">Drag</p>
+      </section>
+
+      <!-- ================= FOOTER CTA ================= -->
+      <section id="contact" class="section">
+        <div class="wrap">
+          <div class="cta-band" data-reveal>
+            <h2>Get plumbing you stop thinking about.</h2>
+            <p>Free inspections, upfront pricing. Most quotes within 48 hours.</p>
+            <div class="cta-row">
+              <a href="mailto:hello@copperline.com" class="btn btn-primary">Get free estimate</a>
+              <a href="tel:+15550147663" class="btn btn-ghost">Call (555) 014-7663</a>
+            </div>
+          </div>
+          <footer class="footer">
+            <p class="wordmark wordmark-foot"><span>Copper</span><span>line</span></p>
+            <p class="fine">© 2026 Copperline Plumbing. Licensed, bonded and insured.</p>
+          </footer>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= SITE FOOTER (curtain reveal) ================= -->
+    <!-- Direct child of body, AFTER main: main slides over it on the
+         way down. Copy renders from CONTENT in src/sections/footer.js. -->
+    <footer class="site-footer">
+      <div class="foot-fixed">
+        <div class="foot-glows" aria-hidden="true"></div>
+        <div class="foot-wrap">
+          <div class="foot-grid">
+            <div class="foot-brand foot-block"></div>
+            <nav class="foot-nav" aria-label="Footer">
+              <div class="foot-cols"></div>
+            </nav>
+          </div>
+          <div class="foot-bottom foot-block"></div>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

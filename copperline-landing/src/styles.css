@@ -219,7 +219,7 @@ html.js-anim #wordmarkLayer { display: flex; }
 .btn-primary:hover { background: #8fe63e; }
 .btn-ghost { border: 1px solid var(--line); color: var(--text); }
 .btn-ghost:hover { border-color: var(--muted); }
-.btn-small { padding: 0.6rem 1.1rem; font-size: var(--fs-small); }
+.btn-small { padding: 0.8rem 1.1rem; font-size: var(--fs-small); } /* 44px tall target */
 
 /* ---------- Hero ---------- */
 .hero {
@@ -307,6 +307,13 @@ html.js-anim #wordmarkLayer { display: flex; }
 }
 /* Vignette: transparent center melting into dark edges, plus one
    faint lime bloom so photo, glow and grid read as a single scene. */
+/* Copy scrim: guarantees AA text contrast over bright photo spots.
+   Anchored left where the copy lives, melting right into the photo. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.25) 45%, transparent 70%);
+}
 .vignette {
   position: absolute;
   inset: 0;
@@ -835,8 +842,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -1009,6 +1016,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums; /* digits keep width mid-count */
 }
 /* Lime rule draws itself left to right under each number. */
 .num-bar {
