@@ -23,10 +23,10 @@ const CONTENT = {
   img: ownerPhoto, // to swap the photo, replace src/assets/owner.webp
   imgAlt: "Portrait of the Copperline founder",
   bio: [
-    "Third-generation plumber, first-generation paperwork hater.",
-    "Still rides along on Friday calls.",
+    "Started at 17 holding the flashlight while his father fixed the leaks other plumbers walked away from.",
+    "27 years later he runs Copperline the same way: show up fast, price it flat, stand behind it in writing.",
   ],
-  quote: ["Fix it once,", "fix it right."],
+  quote: ["I treat every home like it's my own."],
   attribution: "Michael Torres - Founder",
 };
 
