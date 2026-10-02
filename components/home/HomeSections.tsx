@@ -1,173 +1,356 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import {
+  MagnifyingGlass,
+  Wrench,
+  SealCheck,
+  ArrowUpRight,
+  Star,
+  Phone,
+  MapPin,
+  Clock,
+  Plus,
+  Minus,
+} from "@phosphor-icons/react";
 
-interface FeaturedProject {
-  id: number;
-  title: string;
-  image: string;
-  category: string;
-}
-
-const featuredProjects: FeaturedProject[] = [
+const projects = [
   {
-    id: 1,
-    title: "STANDING-SEAM RESIDENCE",
-    category: "Metal Roofing",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    title: "Galvanized to PEX repipe",
+    material: "Whole home, 2 baths",
+    image:
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
+    alt: "Renovated bathroom after a full repipe",
   },
   {
-    id: 2,
-    title: "ESTATE ROOF RENEWAL",
-    category: "Architectural Shingles",
-    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+    title: "Tank to tankless swap",
+    material: "Endless hot water",
+    image:
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
+    alt: "Modern bathroom vanity with wall mounted fixtures",
   },
   {
-    id: 3,
-    title: "MODERN ROOF SYSTEM",
-    category: "Synthetic Slate",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+    title: "Trenchless sewer renewal",
+    material: "No dig replacement",
+    image:
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+    alt: "Finished bathroom served by a renewed sewer line",
   },
 ];
 
 const testimonials = [
   {
-    quote:
-      "The crew was punctual, clean, and incredibly focused. Our new roof looks built for the next forty years.",
-    author: "MARCUS T.",
-    location: "RIVERSIDE",
+    quote: "Found the slab leak two others missed and had it fixed the same day.",
+    name: "Marcus Bell",
+    detail: "Homeowner, Riverside",
   },
   {
-    quote:
-      "EZROOF found the leak our last contractor missed and had it repaired before the next storm.",
-    author: "SARAH L.",
-    location: "HILLCREST",
+    quote: "Tankless swap done in a day, with the old tank hauled away.",
+    name: "Priya Nair",
+    detail: "Homeowner, Hillcrest",
   },
   {
-    quote:
-      "Professional from estimate to cleanup. The new metal roof completely changed our home's curb appeal.",
-    author: "JAMES R.",
-    location: "WESTBROOK",
+    quote: "Upfront flat price, shoe covers on, zero surprises on the invoice.",
+    name: "Dan Whitfield",
+    detail: "Property manager, Westbrook",
+  },
+];
+
+const faqs = [
+  {
+    question: "How fast can you get here?",
+    answer:
+      "Emergency calls get a 90 minute response window. Standard jobs book within 48 hours.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer:
+      "Yes. Every job is run by a licensed, bonded and insured crew, with permits pulled where required.",
+  },
+  {
+    question: "Do you fix sewers without digging?",
+    answer:
+      "Yes. We camera inspect first, then line or burst the pipe trenchless wherever the line allows.",
+  },
+  {
+    question: "Should I flush my water heater?",
+    answer:
+      "Yearly in hard water areas. Our flush service takes under an hour and extends tank life for years.",
+  },
+  {
+    question: "Do I get the price before you start?",
+    answer:
+      "Always. You approve a flat written quote first. The invoice matches it or the extra work is free.",
   },
 ];
 
 export default function HomeSections() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
   return (
-    <div className="w-full bg-neutral-950 text-white selection:bg-orange-600 selection:text-white">
-      {/* SECTION 1: PROVEN ON EVERY PITCH */}
-      <section className="py-24 px-6 sm:px-12 lg:px-16 max-w-7xl mx-auto space-y-12">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-800 pb-6">
-          <div className="space-y-1">
-            <div className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-              BUILT IN THE FIELD
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
-              PROVEN ON EVERY PITCH.
-            </h2>
-          </div>
-
-          <Link
-            href="/projects"
-            className="text-xs font-bold uppercase tracking-widest text-neutral-300 hover:text-[#d85a00] transition-colors flex items-center gap-2 group"
-          >
-            <span>VIEW ALL PROJECTS</span>
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
-        </div>
-
-        {/* Featured Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredProjects.map((project) => (
-            <Link
-              key={project.id}
-              href="/projects"
-              className="group relative h-96 rounded-2xl overflow-hidden border border-neutral-800 flex flex-col justify-end p-6 shadow-xl"
-            >
-              <img
-                src={project.image}
-                alt={project.title}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent" />
-              <div className="relative z-10 space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#d85a00]">
-                  {project.category}
-                </span>
-                <h3 className="text-xl font-black uppercase text-white tracking-tight leading-tight group-hover:text-orange-400 transition-colors">
-                  {project.title}
-                </h3>
+    <div className="w-full bg-zinc-950 text-white">
+      <section className="border-t border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter max-w-[22ch]">
+            Flat quote in one visit or less.
+          </h2>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: MagnifyingGlass,
+                title: "Diagnose",
+                body: "Camera inspection and pressure tests with photos you keep.",
+              },
+              {
+                icon: Wrench,
+                title: "Fix",
+                body: "Shoe covers on, water tested at every fixture before we leave.",
+              },
+              {
+                icon: SealCheck,
+                title: "Backed",
+                body: "Walkthrough plus a 5-year labor warranty in writing.",
+              },
+            ].map((step) => (
+              <div key={step.title} className="border-t-2 border-[#acff46] pt-5">
+                <step.icon size={26} className="text-[#acff46]" aria-hidden />
+                <h3 className="mt-3 text-lg font-bold tracking-tight">{step.title}</h3>
+                <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{step.body}</p>
               </div>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* SECTION 2: YOUR NEIGHBORHOOD. OUR JOB SITE. */}
-      <section className="bg-neutral-200 text-neutral-900 py-20 px-6 sm:px-12 lg:px-16">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7 space-y-4">
-            <div className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-              LOCAL BY DESIGN
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-neutral-900">
-              YOUR NEIGHBORHOOD. OUR JOB SITE.
+      <section className="border-t border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter">
+              Recent jobs, still dry today.
             </h2>
-            <p className="text-neutral-700 text-sm sm:text-base leading-relaxed max-w-xl">
-              Our crews serve homeowners and commercial properties throughout the region with transparent scheduling, clear communication, and no-surprise workmanship.
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-[#acff46] hover:text-white transition-colors shrink-0"
+            >
+              View all projects
+              <ArrowUpRight size={16} weight="bold" aria-hidden />
+            </Link>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <figure className="lg:col-span-7">
+              <div className="rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900">
+                <img
+                  src={projects[0].image}
+                  alt={projects[0].alt}
+                  className="w-full h-80 sm:h-[420px] object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption className="mt-3 flex items-baseline justify-between gap-4">
+                <span className="font-bold tracking-tight">{projects[0].title}</span>
+                <span className="font-mono text-xs text-zinc-400">{projects[0].material}</span>
+              </figcaption>
+            </figure>
+            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
+              {projects.slice(1).map((project) => (
+                <figure key={project.title}>
+                  <div className="rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900">
+                    <img
+                      src={project.image}
+                      alt={project.alt}
+                      className="w-full h-56 lg:h-48 object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <figcaption className="mt-3 flex items-baseline justify-between gap-4">
+                    <span className="font-bold tracking-tight text-sm">{project.title}</span>
+                    <span className="font-mono text-xs text-zinc-400">{project.material}</span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="reviews" className="border-t border-zinc-800 bg-zinc-900/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#acff46]">
+            Homeowner reviews
+          </p>
+          <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter max-w-[22ch]">
+            Rated on shoe covers as much as soldering.
+          </h2>
+
+          <blockquote className="mt-10 max-w-3xl">
+            <div className="flex gap-1 text-[#acff46]" aria-label="Rated 5 out of 5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} size={18} weight="fill" aria-hidden />
+              ))}
+            </div>
+            <p className="mt-4 text-2xl sm:text-3xl font-bold tracking-tight leading-snug">
+              “Found the slab leak two others missed and had it fixed the same
+              day.”
+            </p>
+            <footer className="mt-4 text-sm text-zinc-400">
+              Marcus Bell - Homeowner, Riverside
+            </footer>
+          </blockquote>
+
+          <div className="mt-8 flex gap-4 overflow-x-auto pb-2 snap-x">
+            {testimonials.slice(1).map((item) => (
+              <figure
+                key={item.name}
+                className="min-w-[280px] sm:min-w-[340px] snap-start rounded-2xl border border-zinc-800 bg-zinc-950 p-6"
+              >
+                <div className="flex gap-1 text-[#acff46]" aria-label="Rated 5 out of 5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={14} weight="fill" aria-hidden />
+                  ))}
+                </div>
+                <blockquote className="mt-3 text-sm text-zinc-200 leading-relaxed">
+                  “{item.quote}”
+                </blockquote>
+                <figcaption className="mt-4 text-xs text-zinc-500">
+                  {item.name} - {item.detail}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <div className="lg:col-span-7">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter">
+              Local vans, fast arrival.
+            </h2>
+            <p className="mt-4 text-base text-zinc-400 leading-relaxed max-w-[60ch]">
+              We run stocked vans across six districts, so the part for your
+              fix is usually already on board.
+            </p>
+            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "Northside",
+                "Westbrook",
+                "Riverside",
+                "Milltown",
+                "Hillcrest",
+                "Lakeshore",
+              ].map((area) => (
+                <li
+                  key={area}
+                  className="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-semibold text-zinc-200"
+                >
+                  <MapPin size={16} className="text-[#acff46]" aria-hidden />
+                  {area}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 flex items-center gap-2 text-sm text-zinc-400">
+              <Clock size={16} className="text-[#acff46]" aria-hidden />
+              Mon-Fri 7AM-6PM, Sat 8AM-2PM, burst pipe line open 24/7.
             </p>
           </div>
 
-          <div className="lg:col-span-5 bg-neutral-900 text-white rounded-2xl p-8 space-y-6 shadow-2xl">
-            <div className="space-y-3">
-              <h3 className="text-2xl font-black uppercase tracking-tight text-white">
-                WE'RE ON THE WAY.
-              </h3>
-              <p className="text-xs font-bold uppercase tracking-widest text-neutral-400 leading-relaxed">
-                NORTHSIDE • WESTBROOK • RIVERSIDE<br />
-                MILLTOWN • HILLCREST • LAKESHORE
-              </p>
-            </div>
-
+          <aside className="lg:col-span-5 rounded-2xl bg-[#acff46] text-zinc-950 p-8">
+            <h3 className="text-2xl font-bold tracking-tight">Burst pipe right now?</h3>
+            <p className="mt-2 text-sm font-medium leading-relaxed">
+              Call the burst pipe line. We stop the water today and quote free.
+            </p>
             <a
-              href="tel:5550147663"
-              className="flex items-center gap-3 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-5 py-4 rounded-xl text-xs font-bold uppercase tracking-widest text-white transition-colors"
+              href="tel:+15550147663"
+              className="mt-6 flex items-center justify-center gap-2 bg-zinc-950 hover:bg-zinc-900 text-white font-bold text-sm px-5 py-3.5 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
             >
-              <span className="text-[#d85a00] text-base">📞</span>
-              <span>24/7 HOTLINE (555) 014-ROOF</span>
+              <Phone size={16} weight="bold" aria-hidden />
+              (555) 014-7663
             </a>
+            <Link
+              href="/contact"
+              className="mt-3 flex items-center justify-center gap-2 border-2 border-zinc-950/30 hover:border-zinc-950 text-zinc-950 font-bold text-sm px-5 py-3.5 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+            >
+              Get Free Estimate
+            </Link>
+          </aside>
+        </div>
+      </section>
+
+      <section id="faq" className="border-t border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-5">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter">
+              Questions, answered plainly.
+            </h2>
+            <p className="mt-4 text-sm text-zinc-400 leading-relaxed max-w-md">
+              Response times, warranties, trenchless options and pricing. Still
+              unsure? Send one message and get a human reply.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-6 inline-flex items-center justify-center gap-2 bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-6 py-3 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+            >
+              Get Free Estimate
+            </Link>
+          </div>
+          <div className="lg:col-span-7">
+            {faqs.map((faq, index) => {
+              const isOpen = openIndex === index;
+              return (
+                <div key={faq.question} className="border-b border-zinc-800">
+                  <button
+                    type="button"
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    className="w-full flex justify-between items-center gap-4 py-5 text-left font-bold text-white hover:text-[#acff46] transition-colors"
+                  >
+                    <span className="text-sm sm:text-base">{faq.question}</span>
+                    {isOpen ? (
+                      <Minus size={18} className="text-[#acff46] shrink-0" aria-hidden />
+                    ) : (
+                      <Plus size={18} className="text-[#acff46] shrink-0" aria-hidden />
+                    )}
+                  </button>
+                  {isOpen && (
+                    <p className="pb-5 pr-8 text-sm text-zinc-400 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* SECTION 3: TRUST EARNED. ROOF BY ROOF. */}
-      <section className="py-24 px-6 sm:px-12 lg:px-16 max-w-7xl mx-auto space-y-12">
-        <div className="space-y-2">
-          <div className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-            THE WORD ON THE STREET
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
-            TRUST EARNED. ROOF BY ROOF.
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((item, index) => (
-            <div
-              key={index}
-              className="bg-neutral-100 text-neutral-900 p-8 rounded-2xl space-y-6 flex flex-col justify-between shadow-lg"
-            >
-              <div className="space-y-4">
-                <div className="text-[#d85a00] text-sm tracking-widest font-bold">
-                  ★★★★★
-                </div>
-                <p className="text-xs sm:text-sm font-medium leading-relaxed text-neutral-800">
-                  "{item.quote}"
-                </p>
-              </div>
-
-              <div className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 pt-4 border-t border-neutral-300">
-                {item.author} / {item.location}
-              </div>
+      <section className="border-t border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 px-6 py-12 sm:px-12 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter">
+              Get plumbing you stop thinking about.
+            </h2>
+            <p className="mx-auto mt-3 text-sm sm:text-base text-zinc-400 leading-relaxed max-w-[55ch]">
+              Free inspections, upfront pricing, 5-year labor warranty. Most
+              quotes delivered within 48 hours.
+            </p>
+            <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-6 py-3.5 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+              >
+                Get Free Estimate
+              </Link>
+              <a
+                href="tel:+15550147663"
+                className="inline-flex items-center justify-center gap-2 border border-zinc-700 hover:border-zinc-400 text-white font-semibold text-sm px-6 py-3.5 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+              >
+                <Phone size={16} weight="bold" className="text-[#acff46]" aria-hidden />
+                (555) 014-7663
+              </a>
             </div>
-          ))}
+          </div>
         </div>
       </section>
     </div>

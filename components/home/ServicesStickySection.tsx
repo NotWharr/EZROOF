@@ -1,197 +1,149 @@
-"use client";
+import Link from "next/link";
+import {
+  House,
+  Warehouse,
+  Lightning,
+  Drop,
+  ArrowUpRight,
+} from "@phosphor-icons/react/dist/ssr";
 
-import { useState, useEffect, useRef } from "react";
-
-interface Service {
-  id: string;
-  number: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  solutions: string[];
-  image: string;
-}
-
-const servicesData: Service[] = [
+const services = [
   {
-    id: "01",
-    number: "01",
-    title: "Residential Roof Replacement",
-    subtitle: "Complete home protection with architectural shingles & standing seam metal.",
-    description:
-      "We replace aging or storm-damaged residential roofs with high-durability systems designed to withstand wind, hail, and extreme temperatures. Complete with full tear-off, deck inspection, and synthetic underlayment.",
-    solutions: ["Architectural & Impact Shingles", "Synthetic Underlayment", "Ice & Water Shielding"],
-    image: "https://images.unsplash.com/photo-1628744876497-eb30460be9f6?auto=format&fit=crop&w=1200&q=80",
+    icon: House,
+    title: "Emergency leak repair",
+    body: "Burst pipes, failed valves and active leaks stopped fast, any hour.",
+    points: ["Same day dispatch", "Shutoff and dry out", "Pipe and valve rebuild"],
+    image:
+      "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1200&q=80",
+    alt: "Plumber repairing a pipe fitting under a sink",
   },
   {
-    id: "02",
-    number: "02",
-    title: "Commercial Flat Roof Systems",
-    subtitle: "Single-ply TPO, EPDM, and modified bitumen waterproofing.",
-    description:
-      "Engineered flat roof installations and restorations for warehouses, retail plazas, and office buildings. Highly reflective TPO membranes reduce HVAC energy costs while offering leak-proof seamless protection.",
-    solutions: ["60-Mil TPO Membrane", "EPDM Rubber Systems", "Parapet Flashing & Coping"],
-    image: "https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=1200&q=80",
+    icon: Lightning,
+    title: "Drains and sewer",
+    body: "Camera inspection, cable clearing and hydro jetting that keeps lines open.",
+    points: ["Camera locating", "Hydro jetting", "Trenchless repair"],
+    image: null,
+    alt: "",
   },
   {
-    id: "03",
-    number: "03",
-    title: "Emergency Storm Damage Repair",
-    subtitle: "24/7 rapid tarping, hail inspection, and insurance claim support.",
-    description:
-      "When severe storms compromise your roof structure, our emergency response crews arrive within hours for rapid tarping, detailed hail damage reports, and direct adjuster negotiation.",
-    solutions: ["Emergency Tarping & Sealing", "Insurance Claim Documentation", "Structural OSB Deck Repair"],
-    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+    icon: Drop,
+    title: "Water heaters",
+    body: "Tank and tankless installs, yearly flushes and same day swaps.",
+    points: ["Tank and tankless", "Yearly flush service", "Expansion tanks"],
+    image: null,
+    alt: "",
   },
   {
-    id: "04",
-    number: "04",
-    title: "Custom Metal & Slate Roofing",
-    subtitle: "Premium architectural metal panels and synthetic slate tile systems.",
-    description:
-      "Elevate your property's aesthetics and lifespan with 24-gauge standing seam metal or lightweight synthetic slate tiles. Engineered for a 50+ year lifespan with minimal maintenance required.",
-    solutions: ["Snap-Lock Standing Seam", "Copper Flashing & Gutters", "Synthetic Slate Tile"],
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    icon: Warehouse,
+    title: "Repipes and remodels",
+    body: "Whole home PEX and copper repipes plus bathroom rough ins.",
+    points: ["PEX and copper", "Bathroom rough ins", "Pressure balancing"],
+    image:
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
+    alt: "Renovated bathroom with new fixtures and tile",
   },
 ];
 
 export default function ServicesStickySection() {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (sectionRef.current) {
-            const rect = sectionRef.current.getBoundingClientRect();
-            const totalScrollable = rect.height - window.innerHeight;
-
-            if (totalScrollable > 0) {
-              const currentScroll = -rect.top;
-              const progress = Math.max(0, Math.min(1, currentScroll / totalScrollable));
-              const newIndex = Math.min(
-                servicesData.length - 1,
-                Math.floor(progress * servicesData.length)
-              );
-              setActiveIdx(newIndex);
-            }
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <section
-      id="services"
-      ref={sectionRef}
-      className="relative bg-neutral-950 text-white"
-      style={{ height: `${servicesData.length * 110}vh` }}
-    >
-      <div className="sticky top-0 h-screen flex flex-col justify-between p-6 sm:p-12 lg:p-16 max-w-7xl mx-auto overflow-hidden">
-        {/* Header Bar */}
-        <div className="flex items-center justify-between border-b border-neutral-800 pb-4 z-20">
-          <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white">
-            Our Core <span className="text-[#d85a00]">Services</span>
-          </h2>
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-neutral-400">
-              0{activeIdx + 1} / 0{servicesData.length}
-            </span>
-          </div>
-        </div>
+    <section id="services" className="bg-zinc-950 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter text-white max-w-[20ch]">
+          Every pipe, drain and heater.
+        </h2>
+        <p className="mt-4 text-base text-zinc-400 leading-relaxed max-w-[65ch]">
+          Four services cover 95 percent of what we fix. Pick yours and get a
+          flat quote before any wrench turns.
+        </p>
 
-        {/* Content Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center my-auto py-4 z-10">
-          {/* Left Column: Images */}
-          <div className="lg:col-span-7 h-[320px] sm:h-[460px] rounded-3xl overflow-hidden relative border border-neutral-800 shadow-2xl bg-neutral-900">
-            {servicesData.map((service, index) => {
-              const isActive = index === activeIdx;
-              return (
-                <div
-                  key={service.id}
-                  className={`absolute inset-0 transition-all duration-700 ease-out ${
-                    isActive
-                      ? "opacity-100 scale-100 pointer-events-auto"
-                      : "opacity-0 scale-105 pointer-events-none"
-                  }`}
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+          <article className="lg:col-span-7 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 flex flex-col">
+            <img
+              src={services[0].image as string}
+              alt={services[0].alt}
+              className="w-full h-64 sm:h-72 object-cover"
+              loading="lazy"
+            />
+            <div className="p-7">
+              <House size={26} className="text-[#acff46]" aria-hidden />
+              <h3 className="mt-3 text-xl font-bold tracking-tight">{services[0].title}</h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{services[0].body}</p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {services[0].points.map((point) => (
+                  <li
+                    key={point}
+                    className="bg-zinc-950 border border-zinc-800 text-zinc-300 px-3 py-1.5 rounded-lg text-xs font-medium"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </article>
+
+          <article className="lg:col-span-5 rounded-2xl border border-zinc-800 bg-zinc-900 p-7 flex flex-col justify-between">
+            <div>
+              <Lightning size={26} className="text-[#acff46]" aria-hidden />
+              <h3 className="mt-3 text-xl font-bold tracking-tight">{services[1].title}</h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{services[1].body}</p>
+            </div>
+            <ul className="mt-6 space-y-2">
+              {services[1].points.map((point) => (
+                <li
+                  key={point}
+                  className="flex items-center justify-between border-b border-zinc-800 pb-2 text-sm text-zinc-200"
                 >
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-950/20 to-transparent" />
-                </div>
-              );
-            })}
-          </div>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </article>
 
-          {/* Right Column: Text */}
-          <div className="lg:col-span-5 relative h-[280px] sm:h-[340px] flex flex-col justify-center">
-            {servicesData.map((service, index) => {
-              const isActive = index === activeIdx;
-              return (
-                <div
-                  key={service.id}
-                  className={`absolute inset-0 flex flex-col justify-center space-y-5 transition-all duration-500 ease-out ${
-                    isActive
-                      ? "opacity-100 translate-y-0 pointer-events-auto"
-                      : "opacity-0 translate-y-6 pointer-events-none"
-                  }`}
-                >
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#d85a00] bg-[#d85a00]/10 border border-[#d85a00]/30 px-3 py-1 rounded-full w-max inline-block">
-                      Service {service.number}
-                    </span>
-                    <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white leading-tight">
-                      {service.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm font-semibold text-neutral-300">
-                      {service.subtitle}
-                    </p>
-                  </div>
+          <article className="lg:col-span-5 rounded-2xl border border-[#acff46]/40 bg-[#acff46]/10 p-7 flex flex-col justify-between">
+            <div>
+              <Drop size={26} className="text-[#acff46]" aria-hidden />
+              <h3 className="mt-3 text-xl font-bold tracking-tight">{services[2].title}</h3>
+              <p className="mt-2 text-sm text-zinc-300 leading-relaxed">{services[2].body}</p>
+            </div>
+            <a
+              href="tel:+15550147663"
+              className="mt-6 inline-flex items-center justify-center gap-2 bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-5 py-3 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+            >
+              Call the burst pipe line
+              <ArrowUpRight size={16} weight="bold" aria-hidden />
+            </a>
+          </article>
 
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
-                      Key Capabilities:
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {service.solutions.map((item, idx) => (
-                        <span
-                          key={idx}
-                          className="bg-neutral-900 border border-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 shadow-sm"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#d85a00]" />
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Scroll Progress Bar */}
-        <div className="w-full bg-neutral-900 h-1.5 rounded-full overflow-hidden z-20">
-          <div
-            className="bg-[#d85a00] h-full transition-all duration-300 ease-out"
-            style={{ width: `${((activeIdx + 1) / servicesData.length) * 100}%` }}
-          />
+          <article className="lg:col-span-7 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 flex flex-col md:flex-row">
+            <img
+              src={services[3].image as string}
+              alt={services[3].alt}
+              className="w-full md:w-1/2 h-64 md:h-auto object-cover"
+              loading="lazy"
+            />
+            <div className="p-7 flex-1">
+              <Warehouse size={26} className="text-[#acff46]" aria-hidden />
+              <h3 className="mt-3 text-xl font-bold tracking-tight">{services[3].title}</h3>
+              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{services[3].body}</p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {services[3].points.map((point) => (
+                  <li
+                    key={point}
+                    className="bg-zinc-950 border border-zinc-800 text-zinc-300 px-3 py-1.5 rounded-lg text-xs font-medium"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#acff46] hover:text-white transition-colors"
+              >
+                Get Free Estimate
+                <ArrowUpRight size={16} weight="bold" aria-hidden />
+              </Link>
+            </div>
+          </article>
         </div>
       </div>
     </section>

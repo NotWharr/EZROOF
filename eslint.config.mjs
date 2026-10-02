@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone Vite landing page, not part of the Next.js app:
+    "copperline-landing/**",
   ]),
 ]);
 

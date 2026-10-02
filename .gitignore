@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+copperline-landing/dist/
+copperline-landing/node_modules/
+.playwright-mcp/
+

@@ -10,29 +10,29 @@ interface FaqItem {
 
 const faqData: FaqItem[] = [
   {
-    question: "How do I request an inspection or estimate for my roof?",
+    question: "How fast can you get a plumber to my door?",
     answer:
-      "You can fill out our online quote form, request a callback through our contact page, or call our team directly. We schedule on-site inspections promptly to evaluate your roof's condition.",
+      "Emergency calls get a 90 minute response window. Standard repairs and installs book within 48 hours across all six districts.",
   },
   {
-    question: "Are EZROOF's contractors licensed and insured?",
+    question: "Are your plumbers licensed and insured?",
     answer:
-      "Yes, all EZROOF projects are managed by fully licensed, bonded, and insured structural specialists and roofing professionals. We prioritize complete safety and compliance.",
+      "Yes. Every job is run by licensed, bonded and insured plumbers, with permits pulled where the city requires them.",
   },
   {
-    question: "What type of roofing materials do you specialize in?",
+    question: "Can you replace a sewer line without digging up my yard?",
     answer:
-      "We specialize in architectural asphalt shingles, standing seam metal roofing, commercial TPO/EPDM flat systems, and eco-friendly solar-ready roofing solutions.",
+      "In most cases, yes. We camera inspect first, then reline or burst the pipe trenchless wherever the line allows it.",
   },
   {
-    question: "Do you offer emergency leak and storm repair services?",
+    question: "Tank or tankless water heater, which fits my home?",
     answer:
-      "Absolutely. Our rapid-response emergency repair team is available 24/7 to handle active leaks, storm impact, and immediate structural vulnerabilities.",
+      "Tanks cost less upfront and suit steady use. Tankless fits tight spaces and endless back to back showers. We size both free.",
   },
   {
-    question: "How long does a standard residential roof replacement take?",
+    question: "Do I pay more than the quote if the job runs long?",
     answer:
-      "Most residential replacements are completed within 1 to 2 days, depending on roof size and weather conditions. We perform full cleanup after every job.",
+      "No. You approve a flat written price before we start. If we underestimated, that difference is on us.",
   },
 ];
 
@@ -44,54 +44,42 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="py-24 px-6 sm:px-12 lg:px-16 max-w-7xl mx-auto border-t border-neutral-800">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Left Column: Header & Actions */}
-        <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
-            <div className="text-xs font-bold tracking-widest text-[#d85a00] uppercase">
-              GOT QUESTIONS?
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black uppercase text-white tracking-tight">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-neutral-400 text-sm leading-relaxed max-w-md">
-              Find quick answers about roof inspections, warranties, material options, repair timelines, and emergency support.
-            </p>
-          </div>
-
-          <div className="pt-8 border-t border-neutral-800 space-y-4">
-            <h4 className="text-lg font-bold text-white uppercase">Still Have A Question?</h4>
-            <p className="text-xs text-neutral-400">
-              Every project consultation is designed to be clear, transparent, and stress-free.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-block bg-[#d85a00] hover:bg-[#b84d00] text-white text-xs font-bold px-6 py-3 tracking-widest uppercase transition-colors rounded-xs shadow-md"
-            >
-              Contact Us
-            </Link>
-          </div>
+    <section className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8 border-t border-zinc-800">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="lg:col-span-5">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter">
+            Questions, answered plainly.
+          </h2>
+          <p className="mt-4 text-sm text-zinc-400 leading-relaxed max-w-md">
+            Response times, licensing, trenchless sewer options, heater sizing
+            and flat pricing.
+          </p>
+          <Link
+            href="/contact"
+            className="mt-6 inline-flex items-center justify-center gap-2 bg-[#acff46] hover:bg-[#8fe63e] text-zinc-950 font-bold text-sm px-6 py-3 rounded-xl transition-all active:scale-[0.98] whitespace-nowrap"
+          >
+            Get Free Estimate
+          </Link>
         </div>
 
-        {/* Right Column: Accordion */}
-        <div className="lg:col-span-7 divide-y divide-neutral-800">
+        <div className="lg:col-span-7">
           {faqData.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div key={index} className="py-5">
+              <div key={faq.question} className="border-b border-zinc-800">
                 <button
                   type="button"
                   onClick={() => toggleFaq(index)}
-                  className="w-full flex justify-between items-center text-left text-base font-bold text-white hover:text-[#d85a00] transition-colors gap-4"
+                  aria-expanded={isOpen}
+                  className="w-full flex justify-between items-center gap-4 py-5 text-left font-bold text-white hover:text-[#acff46] transition-colors"
                 >
-                  <span>{faq.question}</span>
-                  <span className="text-2xl font-mono text-[#d85a00] flex-shrink-0">
-                    {isOpen ? "−" : "+"}
+                  <span className="text-sm sm:text-base">{faq.question}</span>
+                  <span className="font-mono text-xl text-[#acff46] shrink-0" aria-hidden>
+                    {isOpen ? "-" : "+"}
                   </span>
                 </button>
                 {isOpen && (
-                  <p className="mt-3 text-neutral-400 text-sm leading-relaxed pr-6 animate-in fade-in duration-300">
+                  <p className="pb-5 pr-8 text-sm text-zinc-400 leading-relaxed">
                     {faq.answer}
                   </p>
                 )}
