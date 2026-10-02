@@ -1,6 +1,7 @@
-# Copperline Landing — Design & Optimization Audit (Step 1)
+# Copperline Landing — Design & Optimization Audit
 
 Date: 2026-10-02. Scope: `copperline-landing/` only (Vite + GSAP + Lenis).
+Status: Steps 2–7 COMPLETE. Fixes committed per step; see Fix log below.
 Skills loaded and followed for this audit:
 - `design-taste-frontend` (repo skill, read in full): hero discipline, eyebrow
   restraint, color/shape consistency locks, motion rules, image strategy.
@@ -196,3 +197,53 @@ Legend: **HIGH** = fix before ship. **MEDIUM** = fix in this pass.
 HIGH: hero 1.6MB weight; text-over-photo scrim; skip link; invisible-focusable dialog; shortcut double-fire; SEO meta set.
 MEDIUM: Inter weights/preload; will-change sweep; shared CONFIG eases; tabular-nums; video lazy-src; captions note; ticker gating; 44px targets; heading levels; [MY NAME]; widths 360/390/1024/1920 + landscape; anchor-handler guard.
 LOW: background-position swipe; owner slot layout anim; gallery double-announce; drag-pill static spot; console/dead-code sweep; resize-listener consolidation; 1920 softness; social hrefs.
+
+## Fix log (Steps 2–7, what actually changed)
+
+- Step 2: `:root` owns colors, surfaces, tracks, glows, z-scale, type
+  scale, radii; `src/sections/motion.js` shares eases/scrub/rise values
+  across all 8 modules; buttons gained cursor + disabled states. Contrast
+  computed numerically: body 18.1, muted 7.0–7.8, lime 16.2 — all PASS AA.
+- Step 3: intro wordmark leaves the tab order mid-flight; nav CTA ~47px;
+  hero copy scrim; dialog uses `autoAlpha` (invisible = unfocusable);
+  `tabular-nums`; video shortcut guard + focusable region + 44px bar.
+- Step 4: hero 768/1280w srcset (24/44KB vs 1.6MB), Inter trimmed to used
+  weights + preloaded latin 700/800, video src lazy within 800px,
+  will-change only around active animation, lens ticker parks off-screen,
+  dead `.quote`/`.narrow` CSS and `hovering` flag removed, nav sync
+  debounced. Bundle: JS 242KB, CSS 23KB, images ~2.6MB (user's 19MB
+  video excluded — compress before launch).
+- Step 5: skip link, H1→H2→H3 order verified live, wordmark
+  aria-hidden/tabindex sync, gallery single-announced captions, socials
+  + dialog close at 44px, anchor-try/catch.
+- Step 6: footer mid-width stacking, minmax grid minimums, glow-bleed
+  and rotate-bbox overflow fixes, wordmark hit-area pseudo, narrow
+  player time readout yields to scrub. Verified 360/375/390/768/1024/
+  1440/1920 + landscape in a real browser, zero horizontal scroll.
+- Step 7: OG/Twitter/theme-color/favicon/canonical + publish placeholders.
+- Port: Next.js app received skip link + main ids, full meta set,
+  44px nav/filter targets, concept footer line, hero fetchpriority.
+
+## What remains (not auto-fixable here)
+
+- `[MY NAME]` + real social URLs + real publish domain + real `og-cover.png`.
+- 19MB `how-we-work.mp4`: re-encode (H.264, ~5–8Mbps, 1080p max).
+- Video captions track for real footage (WCAG prerecorded criterion).
+- Lighthouse must run in a real Chrome (unavailable in this environment):
+  no before/after scores exist. Targets stand: Perf 90+, A11y/SEO/Best
+  Practices 95+, CLS < 0.05, LCP < 2.5s. Biggest LCP lever left is the
+  hero file itself (already srcset; compress the 1672w master).
+
+## Manual test checklist
+
+- [ ] Intro plays once, wordmark lands centered, no flicker (?slowmo check)
+- [ ] Tab reaches skip link first; Enter jumps to content
+- [ ] Scroll top to bottom: pins engage/release, bar hits 100% at bottom
+- [ ] Dialog tile: scrub shows it, click opens modal, Esc closes, focus returns
+- [ ] Video: play/pause/scrub/mute/fullscreen + keyboard (Space M F arrows 0-9)
+- [ ] Gallery: drag, snap centers a card, arrows + buttons work, no league scroll trap
+- [ ] Tabs: click, arrows, scroll auto-advance both halves
+- [ ] Counters run once; footer curtain reveals at the very bottom
+- [ ] 360/768/1440 + landscape: no horizontal scroll, no clipped text
+- [ ] `prefers-reduced-motion`: static page, instant states, no autoplay
+- [ ] Lighthouse mobile: record Perf/A11y/BP/SEO + CLS + LCP above
