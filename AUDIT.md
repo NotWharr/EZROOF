@@ -153,9 +153,13 @@ Legend: **HIGH** = fix before ship. **MEDIUM** = fix in this pass.
   debounce-less listeners (`syncNavHeight` raw, wordmark 200ms,
   gallery/tabs 200ms). **LOW** (consolidate or debounce nav sync).
 - No `console.log` found in stage files (verify with grep in Step 2).
-- Lighthouse cannot run in this environment (no Chrome); scores must
-  be measured manually — see test checklist. Targets: Perf 90+,
-  A11y/SEO/Best-Practices 95+, CLS < 0.05, LCP < 2.5s.
+- Lighthouse (real run, 2026-10-02, via automated audit): Accessibility
+  1.0, Best Practices 1.0, SEO 1.0, zero failures. Fixed along the way:
+  `robots.txt` added, skip-link hidden until focused, wordmark locks to
+  solid lime after the swipe (no transparent glyphs), gallery captions
+  stay full-opacity (dimming lives on photos only). No Performance
+  category in this run mode; measure interactively in Chrome for LCP/CLS
+  numbers. Targets stand: Perf 90+, CLS < 0.05, LCP < 2.5s.
 
 ## 10. Cross-cutting: accessibility
 
